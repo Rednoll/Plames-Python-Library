@@ -44,3 +44,15 @@ class PingJavaAnswer(JavaAnswer):
 
 
 answers.update({1: lambda: PingJavaAnswer()})
+
+
+class TestObjectJavaAnswer(JavaAnswer):
+
+    def read(self, input_socket):
+        buffer_utils.read_object(input_socket)
+
+    def on_received(self):
+        pass
+
+
+answers.update({2: lambda: TestObjectJavaAnswer()})

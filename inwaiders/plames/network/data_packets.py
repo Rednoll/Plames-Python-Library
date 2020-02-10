@@ -22,7 +22,7 @@ class HelloJavaPacket(DataPacket):
 class PingJavaPacket(DataPacket):
 
     def write(self, output):
-        output.extend(struct.pack(">Q", int(round(time.time() * 1000))))
+        output.extend(struct.pack(">q", int(round(time.time() * 1000))))
 
     def get_id(self):
          return 1

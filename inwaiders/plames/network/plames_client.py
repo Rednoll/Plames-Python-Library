@@ -41,7 +41,7 @@ def __write_packets():
         output = []
         packet.write(output)
 
-        clientSocket.send(struct.pack(">H", packet.get_id()))
+        clientSocket.send(struct.pack(">h", packet.get_id()))
         clientSocket.send(struct.pack(">i", len(output)))
         clientSocket.send(bytearray(output))
 
