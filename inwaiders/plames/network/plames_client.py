@@ -10,7 +10,6 @@ packetsQueue = Queue()
 sender = None
 listener = None
 
-
 def connect(address, port):
     global clientSocket, sender, listener
 
@@ -31,6 +30,9 @@ def send(packet):
     global packetsQueue
     packetsQueue.put(packet)
 
+
+def request(object_class_name):
+    pass
 
 def __write_packets():
     global clientSocket, packetsQueue

@@ -56,3 +56,14 @@ class TestObjectJavaAnswer(JavaAnswer):
 
 
 answers.update({2: lambda: TestObjectJavaAnswer()})
+
+
+class ObjectJavaAnswer(JavaAnswer):
+
+    java_object = None
+
+    def read(self, input_socket):
+        java_object = buffer_utils.read_object(input_socket)
+
+    def on_received(self):
+        pass
