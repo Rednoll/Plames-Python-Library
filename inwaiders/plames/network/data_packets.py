@@ -40,7 +40,7 @@ class RequestObject(DataPacket):
 
     def write(self, output):
         buffer_utils.write_utf8(output, self.class_name)
-
+        buffer_utils.write_list(output, self.args)
 
     def get_id(self):
         return 2

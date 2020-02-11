@@ -4,7 +4,7 @@ from inwaiders.plames.network import data_packets
 import struct
 
 plames_client.connect("localhost", 9090)
-plames_client.send(data_packets.PingJavaPacket())
+plames_client.send(data_packets.RequestObject("User", ("Redn_oll", "test")))
 
 
 '''

@@ -49,7 +49,7 @@ answers.update({1: lambda: PingJavaAnswer()})
 class TestObjectJavaAnswer(JavaAnswer):
 
     def read(self, input_socket):
-        buffer_utils.read_object(input_socket)
+        java_object = buffer_utils.read_object(input_socket)
 
     def on_received(self):
         pass
@@ -64,6 +64,7 @@ class ObjectJavaAnswer(JavaAnswer):
 
     def read(self, input_socket):
         java_object = buffer_utils.read_object(input_socket)
+        print(java_object.__class__.__name__)
 
     def on_received(self):
         pass

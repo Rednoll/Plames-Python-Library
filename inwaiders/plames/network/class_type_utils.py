@@ -52,5 +52,7 @@ def getClassType(obj):
             return DOUBLE_ARRAY_TYPE
     if type(obj) == list:
         return LIST_TYPE
+    if type(obj) == tuple:
+        return LIST_TYPE
     if type(obj) == dict:
         return MAP_TYPE
