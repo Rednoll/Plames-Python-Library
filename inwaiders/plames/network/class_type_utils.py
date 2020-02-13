@@ -1,5 +1,6 @@
 import array
 
+OBJECT = -1
 BYTE_TYPE = 0
 CHAR_TYPE = 1
 SHORT_TYPE = 2
@@ -22,37 +23,40 @@ STRING_ARRAY_TYPE = 18
 NULL_TYPE = 19
 BOOLEAN_TYPE = 20
 BOOLEAN_ARRAY_TYPE = 21
+LOCALE = 22
 
 def getClassType(obj):
 
     if type(obj) == bool:
         return BOOLEAN_TYPE
-    if type(obj) == int:
+    elif type(obj) == int:
         return LONG_TYPE
-    if type(obj) == chr:
+    elif type(obj) == chr:
         return CHAR_TYPE
-    if type(obj) == float:
+    elif type(obj) == float:
         return DOUBLE_TYPE
-    if type(obj) == str:
+    elif type(obj) == str:
         return STRING_TYPE
-    if type(obj) == array.array:
+    elif type(obj) == array.array:
         if obj.typecode == 'b':
             return BYTE_ARRAY_TYPE
-        if obj.typecode == 'h':
+        elif obj.typecode == 'h':
             return SHORT_ARRAY_TYPE
-        if obj.typecode == 'u':
+        elif obj.typecode == 'u':
             return CHAR_ARRAY_TYPE
-        if obj.typecode == 'l':
+        elif obj.typecode == 'l':
             return INT_ARRAY_TYPE
-        if obj.typecode == 'q':
+        elif obj.typecode == 'q':
             return LONG_ARRAY_TYPE
-        if obj.typecode == 'f':
+        elif obj.typecode == 'f':
             return FLOAT_ARRAY_TYPE
-        if obj.typecode == 'd':
+        elif obj.typecode == 'd':
             return DOUBLE_ARRAY_TYPE
-    if type(obj) == list:
+    elif type(obj) == list:
         return LIST_TYPE
-    if type(obj) == tuple:
+    elif type(obj) == tuple:
         return LIST_TYPE
-    if type(obj) == dict:
+    elif type(obj) == dict:
         return MAP_TYPE
+
+    return OBJECT

@@ -1,7 +1,8 @@
 import socket
 import struct
 import time
-from inwaiders.plames.network import  buffer_utils
+from inwaiders.plames.network import buffer_utils
+from inwaiders.plames.network import plames_client
 import sys
 
 answers = {}
@@ -58,13 +59,19 @@ class TestObjectJavaAnswer(JavaAnswer):
 answers.update({2: lambda: TestObjectJavaAnswer()})
 
 
-class ObjectJavaAnswer(JavaAnswer):
+class RequestEntityJavaAnswer(JavaAnswer):
+
+    request_id = None
 
     java_object = None
 
     def read(self, input_socket):
-        java_object = buffer_utils.read_object(input_socket)
-        print(java_object.__class__.__name__)
+        self.request_id = buffer_utils.read_long(input_socket)
+        self.java_object = buffer_utils.read_object(input_socket)
 
     def on_received(self):
-        pass
+        plames_client.entity_request_data_dict.update({self.request_id: self.java_object})
+        plames_client.entity_request_events_dict.get(self.request_id).set()
+
+
+answers.update({3: lambda: RequestEntityJavaAnswer()})

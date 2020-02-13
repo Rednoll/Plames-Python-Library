@@ -1,14 +1,22 @@
 import socket
 import struct
 import threading
+from threading import Lock, Event
 from multiprocessing import Queue
 
 from inwaiders.plames.network import java_answer
+from inwaiders.plames.network import data_packets
 
 clientSocket = None
 packetsQueue = Queue()
 sender = None
 listener = None
+
+next_entity_request_id = 0
+
+entity_request_id_lock = Lock()
+entity_request_events_dict = {}
+entity_request_data_dict = {}
 
 def connect(address, port):
     global clientSocket, sender, listener
@@ -31,8 +39,23 @@ def send(packet):
     packetsQueue.put(packet)
 
 
-def request(object_class_name):
-    pass
+def request(entity_name, method_name, args, rep_args=[]):
+    global next_entity_request_id, entity_request_events_dict, entity_request_data_dict
+
+    request_id = -1
+
+    with entity_request_id_lock:
+        request_id = next_entity_request_id
+        next_entity_request_id += 1
+
+    event = Event()
+    entity_request_events_dict.update({request_id: event})
+
+    send(data_packets.RequestEntity(request_id, entity_name, method_name, args, rep_args))
+
+    event.wait()
+
+    return entity_request_data_dict.get(request_id)
 
 def __write_packets():
     global clientSocket, packetsQueue

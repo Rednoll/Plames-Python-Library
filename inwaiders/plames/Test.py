@@ -4,9 +4,15 @@ from inwaiders.plames.network import data_packets
 import struct
 
 plames_client.connect("localhost", 9090)
-plames_client.send(data_packets.RequestObject("User", ("Redn_oll", "test")))
 
+while True:
+    plames_client.send(data_packets.PingJavaPacket())
 
+'''
+user = plames_client.request("User", "getById", [43126])
+
+print("----nick: "+user.nickname)
+'''
 '''
 sock = socket.socket()
 sock.connect(("localhost", 9090))

@@ -187,7 +187,7 @@ def write_object(output, _object):
     elif type_id == class_types.MAP_TYPE:
         write_dict(output, _object)
 
-    else:
+    elif type_id == class_types.OBJECT:
         write_utf8(_object.class_java_name)
 
         _vars = _object.__dict__
@@ -338,70 +338,70 @@ def read_object(input_socket):
     if field_type == class_types.NULL_TYPE:
         return None
 
-    if field_type == class_types.BYTE_TYPE:
+    elif field_type == class_types.BYTE_TYPE:
         return read_byte(input_socket)
 
-    if field_type == class_types.CHAR_TYPE:
+    elif field_type == class_types.CHAR_TYPE:
         return read_char(input_socket)
 
-    if field_type == class_types.SHORT_TYPE:
+    elif field_type == class_types.SHORT_TYPE:
         return read_short(input_socket)
 
-    if field_type == class_types.INT_TYPE:
+    elif field_type == class_types.INT_TYPE:
         return read_int(input_socket)
 
-    if field_type == class_types.LONG_TYPE:
+    elif field_type == class_types.LONG_TYPE:
         return read_long(input_socket)
 
-    if field_type == class_types.FLOAT_TYPE:
+    elif field_type == class_types.FLOAT_TYPE:
         return read_float(input_socket)
 
-    if field_type == class_types.DOUBLE_TYPE:
+    elif field_type == class_types.DOUBLE_TYPE:
         return read_double(input_socket)
 
-    if field_type == class_types.STRING_TYPE:
+    elif field_type == class_types.STRING_TYPE:
         return read_utf8(input_socket)
 
-    if field_type == class_types.BYTE_ARRAY_TYPE:
+    elif field_type == class_types.BYTE_ARRAY_TYPE:
         return input_socket.recv(read_int(input_socket), socket.MSG_WAITALL)
 
-    if field_type == class_types.CHAR_ARRAY_TYPE:
+    elif field_type == class_types.CHAR_ARRAY_TYPE:
         return read_char_array(input_socket)
 
-    if field_type == class_types.SHORT_ARRAY_TYPE:
+    elif field_type == class_types.SHORT_ARRAY_TYPE:
         return read_short_array(input_socket)
 
-    if field_type == class_types.INT_ARRAY_TYPE:
+    elif field_type == class_types.INT_ARRAY_TYPE:
         return read_int_array(input_socket)
 
-    if field_type == class_types.LONG_ARRAY_TYPE:
+    elif field_type == class_types.LONG_ARRAY_TYPE:
         return read_long_array(input_socket)
 
-    if field_type == class_types.FLOAT_ARRAY_TYPE:
+    elif field_type == class_types.FLOAT_ARRAY_TYPE:
         return read_float_array(input_socket)
 
-    if field_type == class_types.DOUBLE_ARRAY_TYPE:
+    elif field_type == class_types.DOUBLE_ARRAY_TYPE:
         return read_double_array(input_socket)
 
-    if field_type == class_types.STRING_ARRAY_TYPE:
+    elif field_type == class_types.STRING_ARRAY_TYPE:
         return read_string_array(input_socket)
 
-    if field_type == class_types.LIST_TYPE:
+    elif field_type == class_types.LIST_TYPE:
         return read_list(input_socket)
 
-    if field_type == class_types.SET_TYPE:
+    elif field_type == class_types.SET_TYPE:
         return read_set(input_socket)
 
-    if field_type == class_types.MAP_TYPE:
+    elif field_type == class_types.MAP_TYPE:
         return read_dict(input_socket)
 
-    if field_type == class_types.BOOLEAN_TYPE:
+    elif field_type == class_types.BOOLEAN_TYPE:
         return read_boolean(input_socket)
 
-    if field_type == class_types.BOOLEAN_ARRAY_TYPE:
+    elif field_type == class_types.BOOLEAN_ARRAY_TYPE:
         return read_boolean_array(input_socket)
 
-    else:
+    elif field_type == class_types.OBJECT:
         class_java_name = read_utf8(input_socket)
         class_name = read_utf8(input_socket)
         super_class_java_name = read_utf8(input_socket)
@@ -413,7 +413,7 @@ def read_object(input_socket):
             field_name = to_snake_case(read_utf8(input_socket))
             field_value = read_object(input_socket)
 
-            print(field_name+": "+str(field_value))
+            print(class_name+"."+field_name+": "+str(field_value))
 
             fields_dict.update({field_name: field_value})
 
@@ -423,6 +423,7 @@ def read_object(input_socket):
 
         return new_object
 
+    return None
 
 def to_snake_case(_str):
     return ''.join(['_' + i.lower() if i.isupper() else i for i in _str]).lstrip('_')
