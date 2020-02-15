@@ -1,18 +1,18 @@
 from inwaiders.plames.network import plames_client
 from inwaiders.plames.network import data_packets
 
+import time
 import struct
+import cProfile
 
 plames_client.connect("localhost", 9090)
 
-while True:
-    plames_client.send(data_packets.PingJavaPacket())
+def test():
 
-'''
-user = plames_client.request("User", "getById", [43126])
+    test_entity = plames_client.create("TestEntity")
 
-print("----nick: "+user.nickname)
-'''
+test()
+
 '''
 sock = socket.socket()
 sock.connect(("localhost", 9090))

@@ -70,8 +70,8 @@ class RequestEntityJavaAnswer(JavaAnswer):
         self.java_object = buffer_utils.read_object(input_socket)
 
     def on_received(self):
-        plames_client.entity_request_data_dict.update({self.request_id: self.java_object})
-        plames_client.entity_request_events_dict.get(self.request_id).set()
+        plames_client.request_data_dict.update({self.request_id: self.java_object})
+        plames_client.request_events_dict.get(self.request_id).set()
 
 
 answers.update({3: lambda: RequestEntityJavaAnswer()})

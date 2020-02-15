@@ -14,9 +14,9 @@ listener = None
 
 next_entity_request_id = 0
 
-entity_request_id_lock = Lock()
-entity_request_events_dict = {}
-entity_request_data_dict = {}
+request_id_lock = Lock()
+request_events_dict = {}
+request_data_dict = {}
 
 def connect(address, port):
     global clientSocket, sender, listener
@@ -39,23 +39,60 @@ def send(packet):
     packetsQueue.put(packet)
 
 
-def request(entity_name, method_name, args, rep_args=[]):
-    global next_entity_request_id, entity_request_events_dict, entity_request_data_dict
+def create(entity_name, args=[], rep_args=[]):
+    global next_entity_request_id, request_events_dict, request_data_dict
 
     request_id = -1
 
-    with entity_request_id_lock:
+    with request_id_lock:
         request_id = next_entity_request_id
         next_entity_request_id += 1
 
     event = Event()
-    entity_request_events_dict.update({request_id: event})
+    request_events_dict.update({request_id: event})
+
+    send(data_packets.RequestCreateEntity(request_id, entity_name, args, rep_args))
+
+    event.wait()
+
+    return request_data_dict.get(request_id)
+
+def request(entity_name, method_name, args, rep_args=[]):
+    global next_entity_request_id, request_events_dict, request_data_dict
+
+    request_id = -1
+
+    with request_id_lock:
+        request_id = next_entity_request_id
+        next_entity_request_id += 1
+
+    event = Event()
+    request_events_dict.update({request_id: event})
 
     send(data_packets.RequestEntity(request_id, entity_name, method_name, args, rep_args))
 
     event.wait()
 
-    return entity_request_data_dict.get(request_id)
+    return request_data_dict.get(request_id)
+
+
+def request_attr(entity_name, entity_id, field_name):
+    global next_entity_request_id, request_events_dict, request_data_dict
+
+    request_id = -1
+
+    with request_id_lock:
+        request_id = next_entity_request_id
+        next_entity_request_id += 1
+
+    event = Event()
+    request_events_dict.update({request_id: event})
+
+    send(data_packets.RequestEntityAttr(request_id, entity_name, entity_id, field_name))
+
+    event.wait()
+
+    return request_data_dict.get(request_id)
 
 def __write_packets():
     global clientSocket, packetsQueue

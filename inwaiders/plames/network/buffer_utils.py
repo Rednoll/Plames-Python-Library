@@ -2,7 +2,7 @@ import socket
 import struct
 import array
 import sys
-from inwaiders.plames.network import class_type_utils
+from inwaiders.plames.network import class_type_utils, plames_client
 
 class_types = class_type_utils
 
@@ -331,77 +331,78 @@ def read_dict(input_socket):
 
     return field_value
 
-def read_object(input_socket):
+def read_object(input_socket, obj_type=None):
 
-    field_type = read_short(input_socket)
+    if obj_type is None:
+        obj_type = read_short(input_socket)
 
-    if field_type == class_types.NULL_TYPE:
+    if obj_type == class_types.NULL_TYPE:
         return None
 
-    elif field_type == class_types.BYTE_TYPE:
+    elif obj_type == class_types.BYTE_TYPE:
         return read_byte(input_socket)
 
-    elif field_type == class_types.CHAR_TYPE:
+    elif obj_type == class_types.CHAR_TYPE:
         return read_char(input_socket)
 
-    elif field_type == class_types.SHORT_TYPE:
+    elif obj_type == class_types.SHORT_TYPE:
         return read_short(input_socket)
 
-    elif field_type == class_types.INT_TYPE:
+    elif obj_type == class_types.INT_TYPE:
         return read_int(input_socket)
 
-    elif field_type == class_types.LONG_TYPE:
+    elif obj_type == class_types.LONG_TYPE:
         return read_long(input_socket)
 
-    elif field_type == class_types.FLOAT_TYPE:
+    elif obj_type == class_types.FLOAT_TYPE:
         return read_float(input_socket)
 
-    elif field_type == class_types.DOUBLE_TYPE:
+    elif obj_type == class_types.DOUBLE_TYPE:
         return read_double(input_socket)
 
-    elif field_type == class_types.STRING_TYPE:
+    elif obj_type == class_types.STRING_TYPE:
         return read_utf8(input_socket)
 
-    elif field_type == class_types.BYTE_ARRAY_TYPE:
+    elif obj_type == class_types.BYTE_ARRAY_TYPE:
         return input_socket.recv(read_int(input_socket), socket.MSG_WAITALL)
 
-    elif field_type == class_types.CHAR_ARRAY_TYPE:
+    elif obj_type == class_types.CHAR_ARRAY_TYPE:
         return read_char_array(input_socket)
 
-    elif field_type == class_types.SHORT_ARRAY_TYPE:
+    elif obj_type == class_types.SHORT_ARRAY_TYPE:
         return read_short_array(input_socket)
 
-    elif field_type == class_types.INT_ARRAY_TYPE:
+    elif obj_type == class_types.INT_ARRAY_TYPE:
         return read_int_array(input_socket)
 
-    elif field_type == class_types.LONG_ARRAY_TYPE:
+    elif obj_type == class_types.LONG_ARRAY_TYPE:
         return read_long_array(input_socket)
 
-    elif field_type == class_types.FLOAT_ARRAY_TYPE:
+    elif obj_type == class_types.FLOAT_ARRAY_TYPE:
         return read_float_array(input_socket)
 
-    elif field_type == class_types.DOUBLE_ARRAY_TYPE:
+    elif obj_type == class_types.DOUBLE_ARRAY_TYPE:
         return read_double_array(input_socket)
 
-    elif field_type == class_types.STRING_ARRAY_TYPE:
+    elif obj_type == class_types.STRING_ARRAY_TYPE:
         return read_string_array(input_socket)
 
-    elif field_type == class_types.LIST_TYPE:
+    elif obj_type == class_types.LIST_TYPE:
         return read_list(input_socket)
 
-    elif field_type == class_types.SET_TYPE:
+    elif obj_type == class_types.SET_TYPE:
         return read_set(input_socket)
 
-    elif field_type == class_types.MAP_TYPE:
+    elif obj_type == class_types.MAP_TYPE:
         return read_dict(input_socket)
 
-    elif field_type == class_types.BOOLEAN_TYPE:
+    elif obj_type == class_types.BOOLEAN_TYPE:
         return read_boolean(input_socket)
 
-    elif field_type == class_types.BOOLEAN_ARRAY_TYPE:
+    elif obj_type == class_types.BOOLEAN_ARRAY_TYPE:
         return read_boolean_array(input_socket)
 
-    elif field_type == class_types.OBJECT:
+    elif obj_type == class_types.OBJECT:
         class_java_name = read_utf8(input_socket)
         class_name = read_utf8(input_socket)
         super_class_java_name = read_utf8(input_socket)
@@ -411,13 +412,28 @@ def read_object(input_socket):
 
         for i in range(0, fields_count):
             field_name = to_snake_case(read_utf8(input_socket))
-            field_value = read_object(input_socket)
+            field_type = read_short(input_socket)
 
-            print(class_name+"."+field_name+": "+str(field_value))
+            if class_type_utils.is_lazy(field_type):
+
+                def get_f(self, field_name=field_name):
+
+                    if hasattr(self, "_"+field_name):
+                        return getattr(self, "_"+field_name)
+                    else:
+                        f_value = plames_client.request_attr(self.class_java_name, self.id, field_name)
+                        setattr(self, "_"+field_name, f_value)
+                        return f_value
+
+                field_value = property(get_f)
+
+            else:
+                field_value = read_object(input_socket, field_type)
 
             fields_dict.update({field_name: field_value})
+            #print(class_name + "." + field_name + ": " + str(field_value))
 
-        new_object = type(class_name, (), fields_dict)
+        new_object = type(class_name, (object,), fields_dict)()
 
         new_object.class_java_name = class_java_name
 
@@ -427,3 +443,16 @@ def read_object(input_socket):
 
 def to_snake_case(_str):
     return ''.join(['_' + i.lower() if i.isupper() else i for i in _str]).lstrip('_')
+
+'''
+def get_obj_field(obj, field_name):
+    print("try get")
+
+    f_value = getattr(obj, "_" + field_name)
+
+    if f_value is None:
+        f_value = plames_client.request_attr(obj.class_java_name, obj.id, field_name)
+        setattr(obj, "_" + field_name, f_value)
+
+    return f_value
+'''

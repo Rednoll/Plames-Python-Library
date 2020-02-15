@@ -24,6 +24,9 @@ NULL_TYPE = 19
 BOOLEAN_TYPE = 20
 BOOLEAN_ARRAY_TYPE = 21
 LOCALE = 22
+LAZY_LIST = 23
+LAZY_SET = 24
+LAZY_MAP = 25
 
 def getClassType(obj):
 
@@ -60,3 +63,12 @@ def getClassType(obj):
         return MAP_TYPE
 
     return OBJECT
+
+def is_lazy(type):
+    if type == LAZY_LIST:
+        return True
+    if type == LAZY_SET:
+        return True
+    if type == LAZY_MAP:
+        return True
+    return False
