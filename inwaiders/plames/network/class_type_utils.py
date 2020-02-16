@@ -1,5 +1,6 @@
 import array
 
+ENTITY = -2
 OBJECT = -1
 BYTE_TYPE = 0
 CHAR_TYPE = 1
@@ -61,6 +62,8 @@ def getClassType(obj):
         return LIST_TYPE
     elif type(obj) == dict:
         return MAP_TYPE
+    elif hasattr(obj, "is_entity") and obj.is_entity:
+        return ENTITY
 
     return OBJECT
 

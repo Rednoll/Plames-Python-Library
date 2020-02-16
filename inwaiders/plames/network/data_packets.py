@@ -84,3 +84,15 @@ class RequestCreateEntity(DataPacket):
 
     def get_id(self):
         return 4
+
+
+class PushEntity(DataPacket):
+
+    def __init__(self, entity):
+        self.entity = entity
+
+    def write(self, output):
+        buffer_utils.write_data(output, self.entity)
+
+    def get_id(self):
+        return 5

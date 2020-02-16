@@ -79,6 +79,8 @@ def request(entity_name, method_name, args, rep_args=[]):
 def request_attr(entity_name, entity_id, field_name):
     global next_entity_request_id, request_events_dict, request_data_dict
 
+    field_name = to_camel_case(field_name)
+
     request_id = -1
 
     with request_id_lock:
@@ -93,6 +95,11 @@ def request_attr(entity_name, entity_id, field_name):
     event.wait()
 
     return request_data_dict.get(request_id)
+
+
+def push(entity):
+    send(data_packets.PushEntity(entity))
+
 
 def __write_packets():
     global clientSocket, packetsQueue
@@ -117,3 +124,7 @@ def __listen():
         packet = java_answer.answers.get(packet_id)()
         packet.read(clientSocket)
         packet.on_received()
+
+def to_camel_case(snake_str):
+    components = snake_str.split('_')
+    return components[0] + ''.join(x.title() for x in components[1:])

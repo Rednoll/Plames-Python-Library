@@ -9,7 +9,15 @@ plames_client.connect("localhost", 9090)
 
 def test():
 
-    test_entity = plames_client.create("TestEntity")
+    test_entity = plames_client.request("TestEntity", "getById", [44804])
+
+    print(test_entity.test_long)
+
+    test_entity.test_long = -7
+
+    print(test_entity.test_long)
+
+    test_entity.push()
 
 test()
 
