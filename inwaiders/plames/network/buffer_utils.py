@@ -140,20 +140,20 @@ def write_dict(output, _object):
 
 def write_fields(output, _object, only_changes=False):
 
-    _vars_type = _object.__types
+    vars_type = _object.__types
 
     if only_changes:
 
         changed_vars = _object.__changed_vars
 
-        write_int(output, len(changed_vars)) #add adaptive calc
+        write_int(output, len(changed_vars))
 
         for var_name in changed_vars:
 
-            var = _object.__dict__[var_name]
+            var = getattr(_object, "_"+var_name)
 
-            write_utf8(output, var_name)
-            write_data(output, var, _vars_type[var_name])
+            write_utf8(output, to_camel_case(var_name))
+            write_data(output, var, vars_type[var_name])
 
     else:
 
@@ -163,11 +163,16 @@ def write_fields(output, _object, only_changes=False):
 
         for var_name in vars_names:
 
-            var = _object.__dict__[var_name]
+            var = _object.__dict__["_"+var_name]
 
-            write_utf8(output, var_name)
-            write_data(output, var, _vars_type[var_name])
+            write_utf8(output, to_camel_case(var_name))
+            write_data(output, var, vars_type[var_name])
 
+def write_entity(output, entity):
+    write_utf8(output, entity.class_java_name)
+    write_long(output, entity.id)
+
+    write_fields(output, entity, True)
 
 def write_data(output, _object, type_id=None):
 
@@ -243,15 +248,12 @@ def write_data(output, _object, type_id=None):
         write_dict(output, _object)
 
     elif type_id == class_types.OBJECT:
-        write_utf8(_object.class_java_name)
+        write_utf8(output, _object.class_java_name)
 
         write_fields(output, _object)
 
     elif type_id == class_types.ENTITY:
-        write_utf8(_object.class_java_name)
-        write_long(_object.id)
-
-        write_fields(output, _object, True)
+        write_entity(output, _object)
 
 
 def read_boolean(input_socket):
@@ -523,6 +525,13 @@ def read_fields(input_socket):
         field_name = to_snake_case(read_utf8(input_socket))
         field_type = read_short(input_socket)
 
+        def set_f(self, value, field_name=field_name):
+
+            setattr(self, "_" + field_name, value)
+
+            if self.__changed_vars.count(field_name) == 0:
+                self.__changed_vars.append(field_name)
+
         if class_type_utils.is_lazy(field_type):
 
             def get_f(self, field_name=field_name):
@@ -534,24 +543,30 @@ def read_fields(input_socket):
                     setattr(self, "_"+field_name, f_value)
                     return f_value
 
-            def set_f(self, value, field_name=field_name):
-
-                setattr(self, "_"+field_name, value)
-
-                if self.__changed_vars.count(field_name) == 0:
-                    self.__changed_vars.append(field_name)
-
             field_value = property(get_f, set_f)
 
         else:
-            field_value = read_data(input_socket, field_type)
+
+            def get_f(self, field_name=field_name):
+
+                if hasattr(self, "_"+field_name):
+                    return getattr(self, "_"+field_name)
+                else:
+                    return None
+
+            fields_dict.update({"_"+field_name: read_data(input_socket, field_type)})
+            field_value = property(get_f, set_f)
 
         fields_dict.update({field_name: field_value})
         fields_types_dict.update({field_name: field_type})
         fields_names.append(field_name)
-        # print(class_name + "." + field_name + ": " + str(field_value))
-    return (fields_dict, fields_types_dict, fields_names)
+        #print(field_name + ": " + str(field_value))
+    return fields_dict, fields_types_dict, fields_names
 
 
 def to_snake_case(_str):
     return ''.join(['_' + i.lower() if i.isupper() else i for i in _str]).lstrip('_')
+
+def to_camel_case(snake_str):
+    components = snake_str.split('_')
+    return components[0] + ''.join(x.title() for x in components[1:])

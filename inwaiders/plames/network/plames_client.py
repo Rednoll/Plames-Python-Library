@@ -6,6 +6,7 @@ from multiprocessing import Queue
 
 from inwaiders.plames.network import java_answer
 from inwaiders.plames.network import data_packets
+from inwaiders.plames.network import buffer_utils
 
 clientSocket = None
 packetsQueue = Queue()
@@ -36,6 +37,8 @@ def connect(address, port):
 
 def send(packet):
     global packetsQueue
+    packet._cached_output = []
+    packet.write(packet._cached_output)
     packetsQueue.put(packet)
 
 
@@ -79,7 +82,7 @@ def request(entity_name, method_name, args, rep_args=[]):
 def request_attr(entity_name, entity_id, field_name):
     global next_entity_request_id, request_events_dict, request_data_dict
 
-    field_name = to_camel_case(field_name)
+    field_name = buffer_utils.to_camel_case(field_name)
 
     request_id = -1
 
@@ -107,13 +110,13 @@ def __write_packets():
     while True:
         packet = packetsQueue.get(True)
 
-        output = []
-        packet.write(output)
+        output = bytearray(packet._cached_output)
 
         clientSocket.send(struct.pack(">h", packet.get_id()))
         clientSocket.send(struct.pack(">i", len(output)))
-        clientSocket.send(bytearray(output))
+        clientSocket.send(output)
 
+        del packet._cached_output
 
 def __listen():
     global clientSocket
@@ -125,6 +128,3 @@ def __listen():
         packet.read(clientSocket)
         packet.on_received()
 
-def to_camel_case(snake_str):
-    components = snake_str.split('_')
-    return components[0] + ''.join(x.title() for x in components[1:])

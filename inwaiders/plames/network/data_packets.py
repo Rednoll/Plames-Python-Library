@@ -5,6 +5,8 @@ from inwaiders.plames.network import buffer_utils
 
 class DataPacket(object):
 
+    _cached_output = None
+
     def write(self, output):
         pass
 
@@ -92,7 +94,8 @@ class PushEntity(DataPacket):
         self.entity = entity
 
     def write(self, output):
-        buffer_utils.write_data(output, self.entity)
+        buffer_utils.write_entity(output, self.entity)
+        del self.entity
 
     def get_id(self):
         return 5
