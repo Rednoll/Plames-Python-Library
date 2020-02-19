@@ -1,7 +1,9 @@
 import array
 
+LINK = -3
 ENTITY = -2
 OBJECT = -1
+
 BYTE_TYPE = 0
 CHAR_TYPE = 1
 SHORT_TYPE = 2
@@ -73,5 +75,12 @@ def is_lazy(type):
     if type == LAZY_SET:
         return True
     if type == LAZY_MAP:
+        return True
+    return False
+
+def is_cacheable(type):
+    if type == OBJECT:
+        return True
+    if type == ENTITY:
         return True
     return False

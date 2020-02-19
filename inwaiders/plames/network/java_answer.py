@@ -75,3 +75,17 @@ class RequestEntityJavaAnswer(JavaAnswer):
 
 
 answers.update({3: lambda: RequestEntityJavaAnswer()})
+
+
+class UnlockJavaAnswer(JavaAnswer):
+
+    request_id = None
+
+    def read(self, input_socket):
+        self.request_id = buffer_utils.read_long(input_socket)
+
+    def on_received(self):
+        plames_client.request_events_dict.get(self.request_id).set()
+
+
+answers.update({4: lambda: UnlockJavaAnswer()})

@@ -7,14 +7,12 @@ import cProfile
 
 plames_client.connect("localhost", 9090)
 
+
 def test():
 
-    test_entity = plames_client.request("TestEntity", "getById", [44805])
+    discord_profile = plames_client.request("DiscordProfile", "getById", [44770])
 
-    print(test_entity.test_long)
-
-    test_entity.test_long = -5
-    test_entity.push()
+    print(discord_profile.discord_id)
 
 test()
 

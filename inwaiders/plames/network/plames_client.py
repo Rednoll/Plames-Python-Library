@@ -100,9 +100,24 @@ def request_attr(entity_name, entity_id, field_name):
     return request_data_dict.get(request_id)
 
 
-def push(entity):
-    send(data_packets.PushEntity(entity))
+def push(entity, blocking=False):
+    global next_entity_request_id, request_events_dict, request_data_dict
 
+    if not blocking:
+        send(data_packets.PushEntity(entity))
+    else:
+        request_id = -1
+
+        with request_id_lock:
+            request_id = next_entity_request_id
+            next_entity_request_id += 1
+
+        event = Event()
+        request_events_dict.update({request_id: event})
+
+        send(data_packets.PushEntity(entity, request_id))
+
+        event.wait()
 
 def __write_packets():
     global clientSocket, packetsQueue

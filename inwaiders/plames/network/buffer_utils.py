@@ -3,7 +3,7 @@ import struct
 import array
 import sys
 from inwaiders.plames.network import class_type_utils, plames_client
-
+from inwaiders.plames import Plames
 
 class_types = class_type_utils
 
@@ -168,18 +168,20 @@ def write_fields(output, _object, only_changes=False):
             write_utf8(output, to_camel_case(var_name))
             write_data(output, var, vars_type[var_name])
 
+
 def write_entity(output, entity):
     write_utf8(output, entity.class_java_name)
     write_long(output, entity.id)
 
     write_fields(output, entity, True)
 
+
 def write_data(output, _object, type_id=None):
 
     if type_id is None:
        type_id = class_types.getClassType(_object)
 
-    write_short(output, type_id)
+    write_short(output, type_id);
 
     if type_id == class_types.BOOLEAN_TYPE:
         write_boolean(output, _object)
@@ -254,7 +256,6 @@ def write_data(output, _object, type_id=None):
 
     elif type_id == class_types.ENTITY:
         write_entity(output, _object)
-
 
 def read_boolean(input_socket):
     return read_byte(input_socket) == 1
@@ -403,7 +404,15 @@ def read_dict(input_socket):
     return field_value
 
 
-def read_data(input_socket, obj_type=None):
+def read_link(input_socket, session):
+    entity_id = read_long(input_socket)
+
+    obj = session.cache.get(entity_id)
+
+    return obj
+
+
+def read_data(input_socket, session, obj_type=None):
 
     if obj_type is None:
         obj_type = read_short(input_socket)
@@ -474,6 +483,9 @@ def read_data(input_socket, obj_type=None):
     elif obj_type == class_types.BOOLEAN_ARRAY_TYPE:
         return read_boolean_array(input_socket)
 
+    elif obj_type == class_types.LINK:
+        return read_link(input_socket, session)
+
     elif obj_type == class_types.OBJECT:
         class_java_name = read_utf8(input_socket)
         class_name = read_utf8(input_socket)
@@ -486,6 +498,9 @@ def read_data(input_socket, obj_type=None):
         new_object.class_java_name = class_java_name
         new_object.__types = fields_data[1]
 
+        if session.cache.get(cache_id) is None:
+            session.save_to_cache(cache_id, new_object)
+
         return new_object
 
     elif obj_type == class_types.ENTITY:
@@ -495,8 +510,8 @@ def read_data(input_socket, obj_type=None):
 
         fields_data = read_fields(input_socket)
 
-        def push(self):
-            plames_client.push(self)
+        def push(self, block=False):
+            plames_client.push(self, block)
 
         fields_data[0].update({"push": push})
 
@@ -507,6 +522,9 @@ def read_data(input_socket, obj_type=None):
         new_object.__fields_names = fields_data[2]
         new_object.__changed_vars = []
         new_object.is_entity = True
+
+        if session.cache.get(cache_id) is None:
+            session.save_to_cache(cache_id, new_object)
 
         return new_object
 

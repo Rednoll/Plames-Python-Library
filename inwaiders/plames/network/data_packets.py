@@ -90,10 +90,12 @@ class RequestCreateEntity(DataPacket):
 
 class PushEntity(DataPacket):
 
-    def __init__(self, entity):
+    def __init__(self, entity, request_id=-1):
         self.entity = entity
+        self.request_id = request_id
 
     def write(self, output):
+        buffer_utils.write_long(output, self.request_id)
         buffer_utils.write_entity(output, self.entity)
         del self.entity
 
