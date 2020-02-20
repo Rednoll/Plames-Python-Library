@@ -3,6 +3,7 @@ import struct
 import time
 from inwaiders.plames.network import buffer_utils
 from inwaiders.plames.network import plames_client
+from inwaiders.plames import Plames
 import sys
 
 answers = {}
@@ -67,7 +68,7 @@ class RequestEntityJavaAnswer(JavaAnswer):
 
     def read(self, input_socket):
         self.request_id = buffer_utils.read_long(input_socket)
-        self.java_object = buffer_utils.read_data(input_socket)
+        self.java_object = buffer_utils.read_data(input_socket, Plames.Session())
 
     def on_received(self):
         plames_client.request_data_dict.update({self.request_id: self.java_object})

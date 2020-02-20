@@ -374,42 +374,34 @@ def read_boolean_array(input_socket):
     return field_value
 
 
-def read_list(input_socket):
+def read_list(input_socket, session):
     field_value = []
 
     size = read_int(input_socket)
     for i in range(0, size):
-        field_value.append(read_data(input_socket))
+        field_value.append(read_data(input_socket, session))
 
     return field_value
 
 
-def read_set(input_socket):
+def read_set(input_socket, session):
     field_value = []
 
     size = read_int(input_socket)
     for i in range(0, size):
-        field_value.append(read_data(input_socket))
+        field_value.append(read_data(input_socket, session))
 
     return field_value
 
 
-def read_dict(input_socket):
+def read_dict(input_socket, session):
     field_value = {}
 
     size = read_int(input_socket)
     for i in range(0, size):
-        field_value.update({read_data(input_socket): read_data(input_socket)})
+        field_value.update({read_data(input_socket, session): read_data(input_socket, session)})
 
     return field_value
-
-
-def read_link(input_socket, session):
-    entity_id = read_long(input_socket)
-
-    obj = session.cache.get(entity_id)
-
-    return obj
 
 
 def read_data(input_socket, session, obj_type=None):
@@ -469,13 +461,13 @@ def read_data(input_socket, session, obj_type=None):
         return read_string_array(input_socket)
 
     elif obj_type == class_types.LIST_TYPE:
-        return read_list(input_socket)
+        return read_list(input_socket, session)
 
     elif obj_type == class_types.SET_TYPE:
-        return read_set(input_socket)
+        return read_set(input_socket, session)
 
     elif obj_type == class_types.MAP_TYPE:
-        return read_dict(input_socket)
+        return read_dict(input_socket, session)
 
     elif obj_type == class_types.BOOLEAN_TYPE:
         return read_boolean(input_socket)
@@ -484,22 +476,23 @@ def read_data(input_socket, session, obj_type=None):
         return read_boolean_array(input_socket)
 
     elif obj_type == class_types.LINK:
-        return read_link(input_socket, session)
+        assert False, "Link can be read only like field!"
 
     elif obj_type == class_types.OBJECT:
         class_java_name = read_utf8(input_socket)
         class_name = read_utf8(input_socket)
         super_class_java_name = read_utf8(input_socket)
 
-        fields_data = read_fields(input_socket)
+        cache_cell = session.get_new_cache_cell()
+
+        fields_data = read_fields(input_socket, session)
 
         new_object = type(class_name, (object,), fields_data[0])()
 
         new_object.class_java_name = class_java_name
         new_object.__types = fields_data[1]
 
-        if session.cache.get(cache_id) is None:
-            session.save_to_cache(cache_id, new_object)
+        cache_cell.value = new_object
 
         return new_object
 
@@ -508,7 +501,9 @@ def read_data(input_socket, session, obj_type=None):
         class_name = read_utf8(input_socket)
         super_class_java_name = read_utf8(input_socket)
 
-        fields_data = read_fields(input_socket)
+        cache_cell = session.get_new_cache_cell()
+
+        fields_data = read_fields(input_socket, session)
 
         def push(self, block=False):
             plames_client.push(self, block)
@@ -523,15 +518,14 @@ def read_data(input_socket, session, obj_type=None):
         new_object.__changed_vars = []
         new_object.is_entity = True
 
-        if session.cache.get(cache_id) is None:
-            session.save_to_cache(cache_id, new_object)
+        cache_cell.value = new_object
 
         return new_object
 
     return None
 
 
-def read_fields(input_socket):
+def read_fields(input_socket, session):
 
     fields_dict = {}
     fields_types_dict = {}
@@ -563,6 +557,21 @@ def read_fields(input_socket):
 
             field_value = property(get_f, set_f)
 
+        elif field_type == class_types.LINK:
+
+            cache_id = read_int(input_socket)
+
+            def get_f(self, field_name=field_name, session=session, cache_id=cache_id):
+
+                if hasattr(self, "_"+field_name):
+                    return getattr(self, "_"+field_name)
+                else:
+                    value = session.get_from_cache(cache_id)
+                    setattr(self, "_"+field_name, value)
+                    return value
+
+            field_value = property(get_f, set_f)
+
         else:
 
             def get_f(self, field_name=field_name):
@@ -572,7 +581,7 @@ def read_fields(input_socket):
                 else:
                     return None
 
-            fields_dict.update({"_"+field_name: read_data(input_socket, field_type)})
+            fields_dict.update({"_"+field_name: read_data(input_socket, session, field_type)})
             field_value = property(get_f, set_f)
 
         fields_dict.update({field_name: field_value})
