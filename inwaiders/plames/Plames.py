@@ -8,6 +8,9 @@ from inwaiders.plames.network import data_packets
 import logging
 from inwaiders.plames.command import command
 import configparser
+import time
+
+agent_id = -1
 
 logger = None
 config_parser = configparser.ConfigParser()
@@ -28,6 +31,16 @@ def main():
     pre_init_modules()
     init_modules()
     post_init_modules()
+
+    connect()
+
+    time.sleep(2)
+
+    print("agent_id: "+str(agent_id))
+
+    plames_client.clientSocket.close()
+
+    time.sleep(2)
 
     connect()
 
@@ -190,6 +203,10 @@ class Session(object):
             self.cache_id = cache_id
             self.value = _obj
 
+
+def set_agent_id(val):
+    global agent_id
+    agent_id = int(val)
 
 if __name__ == "__main__":
     main()

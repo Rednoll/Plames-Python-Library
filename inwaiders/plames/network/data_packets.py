@@ -13,6 +13,7 @@ class DataPacket(object):
     def get_id(self):
         pass
 
+
 class HelloJavaPacket(DataPacket):
 
     def write(self, output):
@@ -22,6 +23,7 @@ class HelloJavaPacket(DataPacket):
 
     def get_id(self):
         return 0
+
 
 class PingJavaPacket(DataPacket):
 

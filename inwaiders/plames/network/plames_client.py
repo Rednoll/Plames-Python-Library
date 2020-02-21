@@ -5,6 +5,7 @@ from threading import Lock, Event
 from multiprocessing import Queue
 
 from inwaiders.plames.network import java_answer
+from inwaiders.plames.network.java_request import JavaRequest
 from inwaiders.plames.network import data_packets
 from inwaiders.plames.network import buffer_utils
 
@@ -21,9 +22,6 @@ request_data_dict = {}
 
 def connect(address, port):
     global clientSocket, sender, listener
-
-    if clientSocket is not None:
-        raise RuntimeError("Клиент уже подключен!")
 
     clientSocket = socket.socket()
     clientSocket.connect((address, port))
@@ -130,17 +128,31 @@ def __write_packets():
 
         clientSocket.send(struct.pack(">h", packet.get_id()))
         clientSocket.send(struct.pack(">i", len(output)))
+
+        if isinstance(packet, JavaRequest):
+            clientSocket.send(struct.pack(">q", packet.request_id))
+
         clientSocket.send(output)
 
         del packet._cached_output
+
 
 def __listen():
     global clientSocket
 
     while True:
         packet_id = struct.unpack(">h", clientSocket.recv(2, socket.MSG_WAITALL))[0]
-        clientSocket.recv(4, socket.MSG_WAITALL)
+        size = clientSocket.recv(4, socket.MSG_WAITALL)
+
         packet = java_answer.answers.get(packet_id)()
+
+        if isinstance(packet, JavaRequest):
+            packet.request_id = struct.unpack(">q", clientSocket.recv(8, socket.MSG_WAITALL))[0]
+
         packet.read(clientSocket)
         packet.on_received()
+
+        if isinstance(packet, JavaRequest):
+            send(packet)
+
 

@@ -5,6 +5,7 @@ from inwaiders.plames.network import buffer_utils
 from inwaiders.plames.network import plames_client
 from inwaiders.plames import Plames
 import sys
+from inwaiders.plames.network import data_packets
 
 answers = {}
 
@@ -90,3 +91,27 @@ class UnlockJavaAnswer(JavaAnswer):
 
 
 answers.update({4: lambda: UnlockJavaAnswer()})
+
+
+class AgentIdJavaAnswer(JavaAnswer):
+
+    def read(self, input):
+        self.agent_id = buffer_utils.read_long(input)
+
+    def on_received(self):
+        Plames.agent_id = self.agent_id
+
+
+answers.update({5: lambda: AgentIdJavaAnswer()})
+
+
+class AgentIdJavaAnswer(JavaAnswer):
+
+    def read(self, input):
+        self.agent_id = buffer_utils.read_long(input)
+
+    def on_received(self):
+        Plames.set_agent_id(self.agent_id)
+
+
+answers.update({7: lambda: AgentIdJavaAnswer()})
