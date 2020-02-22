@@ -4,13 +4,12 @@ import os
 import importlib
 from zipfile import ZipFile
 from inwaiders.plames.network import plames_client
-from inwaiders.plames.network import data_packets
+from inwaiders.plames.network import output_packets
 import logging
 from inwaiders.plames.command import command
 import configparser
 import time
-
-agent_id = -1
+from inwaiders.plames import mutable_data
 
 logger = None
 config_parser = configparser.ConfigParser()
@@ -34,16 +33,6 @@ def main():
 
     connect()
 
-    time.sleep(2)
-
-    print("agent_id: "+str(agent_id))
-
-    plames_client.clientSocket.close()
-
-    time.sleep(2)
-
-    connect()
-
 
 def connect():
     global logger
@@ -63,7 +52,10 @@ def load_configs():
 
     client_config = config_parser["Plames JPC"]
 
+    mutable_data.command_master_config = config_parser["Command Master"]
+
     logger.info("Configs loading complete!")
+
 
 def init_logger():
     global logger
@@ -203,10 +195,6 @@ class Session(object):
             self.cache_id = cache_id
             self.value = _obj
 
-
-def set_agent_id(val):
-    global agent_id
-    agent_id = int(val)
 
 if __name__ == "__main__":
     main()

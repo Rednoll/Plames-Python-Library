@@ -3,7 +3,6 @@ import struct
 import array
 import sys
 from inwaiders.plames.network import class_type_utils, plames_client
-from inwaiders.plames import Plames
 
 class_types = class_type_utils
 

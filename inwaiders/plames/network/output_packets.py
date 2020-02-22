@@ -3,7 +3,7 @@ import time
 from plistlib import Data
 from inwaiders.plames.network import buffer_utils
 
-class DataPacket(object):
+class JavaOutputPacket(object):
 
     _cached_output = None
 
@@ -14,27 +14,7 @@ class DataPacket(object):
         pass
 
 
-class HelloJavaPacket(DataPacket):
-
-    def write(self, output):
-        rawArray = "Hello Java!".encode("utf-8")
-        output.extend(struct.pack(">i", len(rawArray)))
-        output.extend(rawArray)
-
-    def get_id(self):
-        return 0
-
-
-class PingJavaPacket(DataPacket):
-
-    def write(self, output):
-        output.extend(struct.pack(">q", int(round(time.time() * 1000))))
-
-    def get_id(self):
-         return 1
-
-
-class RequestEntity(DataPacket):
+class RequestEntity(JavaOutputPacket):
 
     def __init__(self, request_id, entity_name, method_name, args, rep_args):
         self.request_id = request_id
@@ -51,10 +31,10 @@ class RequestEntity(DataPacket):
         buffer_utils.write_list(output, self.rep_args)
 
     def get_id(self):
-        return 2
+        return 4
 
 
-class RequestEntityAttr(DataPacket):
+class RequestEntityAttr(JavaOutputPacket):
 
     def __init__(self, request_id, entity_name, entity_id, field_name):
         self.request_id = request_id
@@ -69,10 +49,10 @@ class RequestEntityAttr(DataPacket):
         buffer_utils.write_utf8(output, self.field_name)
 
     def get_id(self):
-        return 3
+        return 5
 
 
-class RequestCreateEntity(DataPacket):
+class RequestCreateEntity(JavaOutputPacket):
 
     def __init__(self, request_id, entity_name, args, rep_args):
         self.request_id = request_id
@@ -87,10 +67,10 @@ class RequestCreateEntity(DataPacket):
         buffer_utils.write_list(output, self.rep_args)
 
     def get_id(self):
-        return 4
+        return 6
 
 
-class PushEntity(DataPacket):
+class PushEntity(JavaOutputPacket):
 
     def __init__(self, entity, request_id=-1):
         self.entity = entity
@@ -102,4 +82,4 @@ class PushEntity(DataPacket):
         del self.entity
 
     def get_id(self):
-        return 5
+        return 7

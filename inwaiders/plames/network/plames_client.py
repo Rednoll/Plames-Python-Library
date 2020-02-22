@@ -4,10 +4,13 @@ import threading
 from threading import Lock, Event
 from multiprocessing import Queue
 
-from inwaiders.plames.network import java_answer
+from inwaiders.plames.network import input_packets
 from inwaiders.plames.network.java_request import JavaRequest
-from inwaiders.plames.network import data_packets
+from inwaiders.plames.network import output_packets
 from inwaiders.plames.network import buffer_utils
+import logging
+
+logger = logging.getLogger("Plames.Plames-Client")
 
 clientSocket = None
 packetsQueue = Queue()
@@ -52,7 +55,7 @@ def create(entity_name, args=[], rep_args=[]):
     event = Event()
     request_events_dict.update({request_id: event})
 
-    send(data_packets.RequestCreateEntity(request_id, entity_name, args, rep_args))
+    send(output_packets.RequestCreateEntity(request_id, entity_name, args, rep_args))
 
     event.wait()
 
@@ -71,7 +74,7 @@ def request(entity_name, method_name, args, rep_args=[]):
     event = Event()
     request_events_dict.update({request_id: event})
 
-    send(data_packets.RequestEntity(request_id, entity_name, method_name, args, rep_args))
+    send(output_packets.RequestEntity(request_id, entity_name, method_name, args, rep_args))
 
     event.wait()
 
@@ -92,7 +95,7 @@ def request_attr(entity_name, entity_id, field_name):
     event = Event()
     request_events_dict.update({request_id: event})
 
-    send(data_packets.RequestEntityAttr(request_id, entity_name, entity_id, field_name))
+    send(output_packets.RequestEntityAttr(request_id, entity_name, entity_id, field_name))
 
     event.wait()
 
@@ -103,7 +106,7 @@ def push(entity, blocking=False):
     global next_entity_request_id, request_events_dict, request_data_dict
 
     if not blocking:
-        send(data_packets.PushEntity(entity))
+        send(output_packets.PushEntity(entity))
     else:
         request_id = -1
 
@@ -114,9 +117,12 @@ def push(entity, blocking=False):
         event = Event()
         request_events_dict.update({request_id: event})
 
-        send(data_packets.PushEntity(entity, request_id))
+        send(output_packets.PushEntity(entity, request_id))
 
         event.wait()
+
+def __on_disconnect():
+    logger.info("Disconnected from Plames machine")
 
 def __write_packets():
     global clientSocket, packetsQueue
@@ -140,19 +146,25 @@ def __write_packets():
 def __listen():
     global clientSocket
 
-    while True:
-        packet_id = struct.unpack(">h", clientSocket.recv(2, socket.MSG_WAITALL))[0]
-        size = clientSocket.recv(4, socket.MSG_WAITALL)
+    try:
 
-        packet = java_answer.answers.get(packet_id)()
+        while True:
+            packet_id = struct.unpack(">h", clientSocket.recv(2, socket.MSG_WAITALL))[0]
+            size = clientSocket.recv(4, socket.MSG_WAITALL)
 
-        if isinstance(packet, JavaRequest):
-            packet.request_id = struct.unpack(">q", clientSocket.recv(8, socket.MSG_WAITALL))[0]
+            packet = input_packets.answers.get(packet_id)()
 
-        packet.read(clientSocket)
-        packet.on_received()
+            if isinstance(packet, JavaRequest):
+                packet.request_id = struct.unpack(">q", clientSocket.recv(8, socket.MSG_WAITALL))[0]
 
-        if isinstance(packet, JavaRequest):
-            send(packet)
+            packet.read(clientSocket)
+            packet.on_received()
+
+            if isinstance(packet, JavaRequest):
+                send(packet)
+
+    except ConnectionAbortedError:
+        __on_disconnect()
+
 
 
