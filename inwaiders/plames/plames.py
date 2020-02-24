@@ -28,10 +28,11 @@ def main():
     load_modules()
 
     pre_init_modules()
-    init_modules()
-    post_init_modules()
 
     connect()
+
+    init_modules()
+    post_init_modules()
 
 
 def connect():
@@ -164,10 +165,18 @@ class Session(object):
 
     def is_cached(self, _obj):
         for _id in self._cache:
-            value = self._cache.get(_id)
-            if value is _obj:
+            cell = self._cache.get(_id)
+            if cell.value is _obj:
                 return True
         return False
+
+    def get_cache_id(self, _obj):
+        for _id in self._cache:
+            cell = self._cache.get(_id)
+            if cell.values is _obj:
+                return _id
+        return -1
+
 
     def get_from_cache(self, cache_id):
         cell = self._cache.get(cache_id)

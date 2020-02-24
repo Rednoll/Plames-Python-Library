@@ -2,10 +2,14 @@ import struct
 import time
 from plistlib import Data
 from inwaiders.plames.network import buffer_utils
+from inwaiders.plames import plames
+
 
 class JavaOutputPacket(object):
 
-    _cached_output = None
+    def __init__(self):
+        self._cached_output = None
+        self.session = plames.Session()
 
     def write(self, output):
         pass

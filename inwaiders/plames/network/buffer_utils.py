@@ -112,32 +112,32 @@ def write_string_array(output, _object):
         write_utf8(output, sub)
 
 
-def write_list(output, _object):
+def write_list(output, _object, session=None):
     size = len(_object)
     write_int(output, size)
 
     for sub in _object:
-        write_data(output, sub)
+        write_data(output, sub, session)
 
 
-def write_set(output, _object):
+def write_set(output, _object, session=None):
     size = len(_object)
     write_int(output, size)
 
     for sub in _object:
-        write_data(sub)
+        write_data(output, sub, session)
 
 
-def write_dict(output, _object):
+def write_dict(output, _object, session=None):
     size = len(_object)
     write_int(output, size)
 
     for key in _object:
-        write_data(key)
-        write_data(_object[key])
+        write_data(output, key, session)
+        write_data(output, _object[key], session)
 
 
-def write_fields(output, _object, only_changes=False):
+def write_fields(output, _object, only_changes=False, session=None):
 
     vars_type = _object.__types
 
@@ -152,7 +152,7 @@ def write_fields(output, _object, only_changes=False):
             var = getattr(_object, "_"+var_name)
 
             write_utf8(output, to_camel_case(var_name))
-            write_data(output, var, vars_type[var_name])
+            write_data(output, var, session, vars_type[var_name])
 
     else:
 
@@ -165,20 +165,29 @@ def write_fields(output, _object, only_changes=False):
             var = _object.__dict__["_"+var_name]
 
             write_utf8(output, to_camel_case(var_name))
-            write_data(output, var, vars_type[var_name])
+            write_data(output, var, session, vars_type[var_name])
 
 
-def write_entity(output, entity):
+def write_entity(output, entity, session=None):
     write_utf8(output, entity.class_java_name)
     write_long(output, entity.id)
 
-    write_fields(output, entity, True)
+    session.get_new_cache_cell().value = entity
+
+    write_fields(output, entity, True, session)
 
 
-def write_data(output, _object, type_id=None):
+def write_data(output, _object, session=None, type_id=None):
 
     if type_id is None:
-       type_id = class_types.getClassType(_object)
+       type_id = class_types.get_class_type(_object)
+
+    if class_types.is_cacheable(type_id):
+
+        if session.is_cached(_object):
+            write_short(class_types.LINK)
+            write_int(session.get_cache_id(_object));
+            return
 
     write_short(output, type_id);
 
@@ -240,21 +249,24 @@ def write_data(output, _object, type_id=None):
         write_string_array(output, _object)
 
     elif type_id == class_types.LIST_TYPE:
-        write_list(output, _object)
+        write_list(output, _object, session)
 
     elif type_id == class_types.SET_TYPE:
-        write_set(output, _object)
+        write_set(output, _object, session)
 
     elif type_id == class_types.MAP_TYPE:
-        write_dict(output, _object)
+        write_dict(output, _object, session)
 
     elif type_id == class_types.OBJECT:
         write_utf8(output, _object.class_java_name)
 
-        write_fields(output, _object)
+        session.get_new_cache_cell().value = _object
+
+        write_fields(output, _object, False, session)
 
     elif type_id == class_types.ENTITY:
-        write_entity(output, _object)
+        write_entity(output, _object, session)
+
 
 def read_boolean(input_socket):
     return read_byte(input_socket) == 1

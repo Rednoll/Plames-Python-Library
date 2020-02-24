@@ -17,7 +17,7 @@ packetsQueue = Queue()
 sender = None
 listener = None
 
-next_entity_request_id = 0
+next_request_id = 0
 
 request_id_lock = Lock()
 request_events_dict = {}
@@ -44,13 +44,13 @@ def send(packet):
 
 
 def create(entity_name, args=[], rep_args=[]):
-    global next_entity_request_id, request_events_dict, request_data_dict
+    global next_request_id, request_events_dict, request_data_dict
 
     request_id = -1
 
     with request_id_lock:
-        request_id = next_entity_request_id
-        next_entity_request_id += 1
+        request_id = next_request_id
+        next_request_id += 1
 
     event = Event()
     request_events_dict.update({request_id: event})
@@ -62,14 +62,34 @@ def create(entity_name, args=[], rep_args=[]):
     return request_data_dict.get(request_id)
 
 
-def request(entity_name, method_name, args, rep_args=[]):
-    global next_entity_request_id, request_events_dict, request_data_dict
+def request(request_packet):
+    global next_request_id, request_events_dict, request_data_dict
 
     request_id = -1
 
     with request_id_lock:
-        request_id = next_entity_request_id
-        next_entity_request_id += 1
+        request_id = next_request_id
+        next_request_id += 1
+
+    event = Event()
+    request_events_dict.update({request_id: event})
+
+    send(request_packet)
+
+    event.wait()
+
+    return request_data_dict.get(request_id)
+
+
+
+def request_entity(entity_name, method_name, args, rep_args=[]):
+    global next_request_id, request_events_dict, request_data_dict
+
+    request_id = -1
+
+    with request_id_lock:
+        request_id = next_request_id
+        next_request_id += 1
 
     event = Event()
     request_events_dict.update({request_id: event})
@@ -82,15 +102,15 @@ def request(entity_name, method_name, args, rep_args=[]):
 
 
 def request_attr(entity_name, entity_id, field_name):
-    global next_entity_request_id, request_events_dict, request_data_dict
+    global next_request_id, request_events_dict, request_data_dict
 
     field_name = buffer_utils.to_camel_case(field_name)
 
     request_id = -1
 
     with request_id_lock:
-        request_id = next_entity_request_id
-        next_entity_request_id += 1
+        request_id = next_request_id
+        next_request_id += 1
 
     event = Event()
     request_events_dict.update({request_id: event})
@@ -103,7 +123,7 @@ def request_attr(entity_name, entity_id, field_name):
 
 
 def push(entity, blocking=False):
-    global next_entity_request_id, request_events_dict, request_data_dict
+    global next_request_id, request_events_dict, request_data_dict
 
     if not blocking:
         send(output_packets.PushEntity(entity))
@@ -111,8 +131,8 @@ def push(entity, blocking=False):
         request_id = -1
 
         with request_id_lock:
-            request_id = next_entity_request_id
-            next_entity_request_id += 1
+            request_id = next_request_id
+            next_request_id += 1
 
         event = Event()
         request_events_dict.update({request_id: event})
