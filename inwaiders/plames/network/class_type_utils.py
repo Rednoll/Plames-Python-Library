@@ -1,6 +1,5 @@
 import array
 from inwaiders.plames import plames
-from inwaiders.plames.network import plames_client, java_request
 
 LINK = -3
 ENTITY = -2
@@ -36,12 +35,14 @@ LAZY_MAP = 25
 
 def get_class_fields_types(class_java_name):
 
+    from inwaiders.plames.network import plames_client, request_packets
+
     cached = plames.mutable_data.classes_types.get(class_java_name)
 
     if cached is not None:
         return cached
     else:
-        types = plames_client.request(java_request.ClassTypesRequest(class_java_name))
+        types = plames_client.request(request_packets.ClassTypesRequest(class_java_name))
         plames.mutable_data.classes_types.update({class_java_name: types})
         return types
 
@@ -84,6 +85,7 @@ def get_class_type(obj):
 
     return OBJECT
 
+
 def is_lazy(type):
     if type == LAZY_LIST:
         return True
@@ -92,6 +94,7 @@ def is_lazy(type):
     if type == LAZY_MAP:
         return True
     return False
+
 
 def is_cacheable(type):
     if type == OBJECT:

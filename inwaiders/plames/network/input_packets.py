@@ -1,13 +1,7 @@
-import socket
-import struct
-import time
 from inwaiders.plames.network import buffer_utils
 from inwaiders.plames.network import plames_client
-import sys
-from inwaiders.plames.network import output_packets
 from inwaiders.plames import plames
 from inwaiders.plames import mutable_data
-answers = {}
 
 
 class JavaInputPacket(object):
@@ -38,7 +32,7 @@ class RequestEntity(JavaInputPacket):
         plames_client.request_events_dict.get(self.request_id).set()
 
 
-answers.update({0: lambda: RequestEntity()})
+mutable_data.input_packet_registry.update({0: lambda: RequestEntity()})
 
 
 class Unlock(JavaInputPacket):
@@ -52,7 +46,7 @@ class Unlock(JavaInputPacket):
         plames_client.request_events_dict.get(self.request_id).set()
 
 
-answers.update({1: lambda: Unlock()})
+mutable_data.input_packet_registry.update({1: lambda: Unlock()})
 
 
 class AgentId(JavaInputPacket):
@@ -64,4 +58,4 @@ class AgentId(JavaInputPacket):
         mutable_data.agent_id = self.agent_id
 
 
-answers.update({3: lambda: AgentId()})
+mutable_data.input_packet_registry.update({3: lambda: AgentId()})

@@ -1,0 +1,47 @@
+from inwaiders.plames.network.input_packets import JavaInputPacket
+from inwaiders.plames.network.output_packets import JavaOutputPacket
+from inwaiders.plames.network import buffer_utils, plames_client
+from inwaiders.plames import plames
+from inwaiders.plames import mutable_data
+
+
+class RequestEndpoint(JavaInputPacket, JavaOutputPacket):
+
+    def __init__(self):
+        self.session = plames.Session()
+        self.request_id = -1
+
+    def on_received(self):
+        pass
+
+
+class AgentIdRequest(RequestEndpoint):
+
+    def write(self, output):
+        buffer_utils.write_long(output, mutable_data.agent_id)
+
+    def read(self, input):
+        pass
+
+    def get_id(self):
+        return 2
+
+
+mutable_data.input_packet_registry.update({2: lambda: AgentIdRequest()})
+
+
+class MessengerCommandsRequest(RequestEndpoint):
+
+    def read(self, input):
+        pass
+
+    def write(self, output):
+
+        buffer_utils.write_dict(output, mutable_data.commands_registry, self.session)
+        pass
+
+    def get_id(self):
+        return 8
+
+
+mutable_data.input_packet_registry.update({8: lambda: MessengerCommandsRequest()})

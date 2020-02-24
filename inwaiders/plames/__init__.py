@@ -5,5 +5,6 @@ class MutableData(object):
         self.commands_registry = {}
         self.command_master_config = None
         self.classes_types = {}
+        self.input_packet_registry = {}
 
 mutable_data = MutableData()

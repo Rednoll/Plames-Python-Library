@@ -4,8 +4,9 @@ import threading
 from threading import Lock, Event
 from multiprocessing import Queue
 
-from inwaiders.plames.network import input_packets
-from inwaiders.plames.network.java_request import JavaRequest
+from inwaiders.plames.plames import mutable_data
+from inwaiders.plames.network.request_packets import JavaRequest
+from inwaiders.plames.network.request_endpoints import RequestEndpoint
 from inwaiders.plames.network import output_packets
 from inwaiders.plames.network import buffer_utils
 import logging
@@ -73,6 +74,8 @@ def request(request_packet):
 
     event = Event()
     request_events_dict.update({request_id: event})
+
+    request_packet.request_id = request_id
 
     send(request_packet)
 
@@ -172,15 +175,15 @@ def __listen():
             packet_id = struct.unpack(">h", clientSocket.recv(2, socket.MSG_WAITALL))[0]
             size = clientSocket.recv(4, socket.MSG_WAITALL)
 
-            packet = input_packets.answers.get(packet_id)()
+            packet = mutable_data.input_packet_registry.get(packet_id)()
 
-            if isinstance(packet, JavaRequest):
+            if isinstance(packet, JavaRequest) or isinstance(packet, RequestEndpoint):
                 packet.request_id = struct.unpack(">q", clientSocket.recv(8, socket.MSG_WAITALL))[0]
 
             packet.read(clientSocket)
             packet.on_received()
 
-            if isinstance(packet, JavaRequest):
+            if isinstance(packet, RequestEndpoint):
                 send(packet)
 
     except ConnectionAbortedError:
