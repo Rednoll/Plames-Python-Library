@@ -24,8 +24,12 @@ request_id_lock = Lock()
 request_events_dict = {}
 request_data_dict = {}
 
+connect_lock = None
+
 def connect(address, port, lock=True):
-    global clientSocket, sender, listener
+    global clientSocket, sender, listener, connect_lock
+
+    connect_lock = Event()
 
     clientSocket = socket.socket()
     clientSocket.connect((address, port))
@@ -35,6 +39,8 @@ def connect(address, port, lock=True):
 
     listener = threading.Thread(target=__listen)
     listener.start();
+
+    connect_lock.wait()
 
 
 
