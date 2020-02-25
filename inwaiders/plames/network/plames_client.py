@@ -24,7 +24,7 @@ request_id_lock = Lock()
 request_events_dict = {}
 request_data_dict = {}
 
-def connect(address, port):
+def connect(address, port, lock=True):
     global clientSocket, sender, listener
 
     clientSocket = socket.socket()
@@ -35,6 +35,7 @@ def connect(address, port):
 
     listener = threading.Thread(target=__listen)
     listener.start();
+
 
 
 def send(packet):
@@ -82,7 +83,6 @@ def request(request_packet):
     event.wait()
 
     return request_data_dict.get(request_id)
-
 
 
 def request_entity(entity_name, method_name, args, rep_args=[]):
@@ -144,13 +144,20 @@ def push(entity, blocking=False):
 
         event.wait()
 
+
 def __on_disconnect():
     logger.info("Disconnected from Plames machine")
+    mutable_data.plames_connection_inited = False
+
 
 def __write_packets():
     global clientSocket, packetsQueue
 
     while True:
+        '''
+        while not mutable_data.plames_connection_inited:
+            pass
+        '''
         packet = packetsQueue.get(True)
 
         output = bytearray(packet._cached_output)

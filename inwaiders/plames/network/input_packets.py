@@ -59,3 +59,15 @@ class AgentId(JavaInputPacket):
 
 
 mutable_data.input_packet_registry.update({3: lambda: AgentId()})
+
+
+class ConnectionInited(JavaInputPacket):
+
+    def read(self, input):
+        pass
+
+    def on_received(self):
+        mutable_data.plames_connection_inited = True
+
+
+mutable_data.input_packet_registry.update({10: lambda: ConnectionInited()})
