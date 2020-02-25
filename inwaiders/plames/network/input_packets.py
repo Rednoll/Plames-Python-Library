@@ -68,6 +68,10 @@ class ConnectionInited(JavaInputPacket):
 
     def on_received(self):
         mutable_data.plames_connection_inited = True
+        
+        if plames_client.connect_lock is not None:
+            plames_client.connect_lock.set()
+
 
 
 mutable_data.input_packet_registry.update({10: lambda: ConnectionInited()})
