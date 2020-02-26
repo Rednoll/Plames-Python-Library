@@ -8,7 +8,7 @@ from inwaiders.plames import mutable_data
 class RequestEndpoint(JavaInputPacket, JavaOutputPacket):
 
     def __init__(self):
-        self.session = plames.Session()
+        super().__init__()
         self.request_id = -1
 
     def on_received(self):
@@ -17,11 +17,14 @@ class RequestEndpoint(JavaInputPacket, JavaOutputPacket):
 
 class AgentIdRequest(RequestEndpoint):
 
-    def write(self, output):
-        buffer_utils.write_long(output, mutable_data.agent_id)
+    def __init__(self):
+        super().__init__()
 
     def read(self, input):
         pass
+
+    def write(self, output):
+        buffer_utils.write_long(output, mutable_data.agent_id)
 
     def get_id(self):
         return 2
@@ -31,6 +34,9 @@ mutable_data.input_packet_registry.update({2: lambda: AgentIdRequest()})
 
 
 class MessengerCommandsRequest(RequestEndpoint):
+
+    def __init__(self):
+        super().__init__()
 
     def read(self, input):
         pass

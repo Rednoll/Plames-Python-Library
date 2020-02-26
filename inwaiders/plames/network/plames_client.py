@@ -9,78 +9,53 @@ from inwaiders.plames.network.request_packets import JavaRequest
 from inwaiders.plames.network.request_endpoints import RequestEndpoint
 from inwaiders.plames.network import output_packets
 from inwaiders.plames.network import buffer_utils
+from inwaiders.plames.network import request_packets
 import logging
 
 logger = logging.getLogger("Plames.Plames-Client")
 
-clientSocket = None
-packetsQueue = Queue()
-sender = None
-listener = None
-
-next_request_id = 0
-
-request_id_lock = Lock()
-request_events_dict = {}
-request_data_dict = {}
-
-connect_lock = None
 
 def connect(address, port, lock=True):
-    global clientSocket, sender, listener, connect_lock
 
-    connect_lock = Event()
+    if lock:
+        mutable_data.connect_lock = Event()
 
-    clientSocket = socket.socket()
-    clientSocket.connect((address, port))
+    mutable_data.clientSocket = socket.socket()
+    mutable_data.clientSocket.connect((address, port))
 
-    sender = threading.Thread(target=__write_packets)
-    sender.start()
+    mutable_data.sender = threading.Thread(target=__write_packets)
+    mutable_data.sender.start()
 
-    listener = threading.Thread(target=__listen)
-    listener.start();
+    mutable_data.listener = threading.Thread(target=__listen)
+    mutable_data.listener.start()
 
-    connect_lock.wait()
+    mutable_data.executor = threading.Thread(target=__execute)
+    mutable_data.executor.start()
 
+    if lock:
+        mutable_data.connect_lock.wait()
 
 
 def send(packet):
-    global packetsQueue
     packet._cached_output = []
     packet.write(packet._cached_output)
-    packetsQueue.put(packet)
+    mutable_data.packetsQueue.put(packet)
 
 
 def create(entity_name, args=[], rep_args=[]):
-    global next_request_id, request_events_dict, request_data_dict
-
-    request_id = -1
-
-    with request_id_lock:
-        request_id = next_request_id
-        next_request_id += 1
-
-    event = Event()
-    request_events_dict.update({request_id: event})
-
-    send(output_packets.RequestCreateEntity(request_id, entity_name, args, rep_args))
-
-    event.wait()
-
-    return request_data_dict.get(request_id)
+    return request(request_packets.RequestCreateEntity(entity_name, args, rep_args)).java_object
 
 
 def request(request_packet):
-    global next_request_id, request_events_dict, request_data_dict
 
     request_id = -1
 
-    with request_id_lock:
-        request_id = next_request_id
-        next_request_id += 1
+    with mutable_data.request_id_lock:
+        request_id = mutable_data.next_request_id
+        mutable_data.next_request_id += 1
 
     event = Event()
-    request_events_dict.update({request_id: event})
+    mutable_data.request_events_dict.update({request_id: event})
 
     request_packet.request_id = request_id
 
@@ -88,63 +63,30 @@ def request(request_packet):
 
     event.wait()
 
-    return request_data_dict.get(request_id)
+    return mutable_data.request_data_dict.get(request_id)
 
 
 def request_entity(entity_name, method_name, args, rep_args=[]):
-    global next_request_id, request_events_dict, request_data_dict
-
-    request_id = -1
-
-    with request_id_lock:
-        request_id = next_request_id
-        next_request_id += 1
-
-    event = Event()
-    request_events_dict.update({request_id: event})
-
-    send(output_packets.RequestEntity(request_id, entity_name, method_name, args, rep_args))
-
-    event.wait()
-
-    return request_data_dict.get(request_id)
+    return request(request_packets.RequestEntity(entity_name, method_name, args, rep_args)).java_object
 
 
 def request_attr(entity_name, entity_id, field_name):
-    global next_request_id, request_events_dict, request_data_dict
-
-    field_name = buffer_utils.to_camel_case(field_name)
-
-    request_id = -1
-
-    with request_id_lock:
-        request_id = next_request_id
-        next_request_id += 1
-
-    event = Event()
-    request_events_dict.update({request_id: event})
-
-    send(output_packets.RequestEntityAttr(request_id, entity_name, entity_id, field_name))
-
-    event.wait()
-
-    return request_data_dict.get(request_id)
+    return request(request_packets.RequestEntityAttr(entity_name, entity_id, field_name)).java_object
 
 
 def push(entity, blocking=False):
-    global next_request_id, request_events_dict, request_data_dict
 
     if not blocking:
         send(output_packets.PushEntity(entity))
     else:
         request_id = -1
 
-        with request_id_lock:
-            request_id = next_request_id
-            next_request_id += 1
+        with mutable_data.request_id_lock:
+            request_id = mutable_data.next_request_id
+            mutable_data.next_request_id += 1
 
         event = Event()
-        request_events_dict.update({request_id: event})
+        mutable_data.request_events_dict.update({request_id: event})
 
         send(output_packets.PushEntity(entity, request_id))
 
@@ -156,48 +98,54 @@ def __on_disconnect():
     mutable_data.plames_connection_inited = False
 
 
+def __execute():
+
+    while True:
+        packet = mutable_data.executorQueue.get(True)
+        packet.on_received()
+
+        if isinstance(packet, RequestEndpoint):
+            send(packet)
+
+
 def __write_packets():
-    global clientSocket, packetsQueue
 
     while True:
         '''
         while not mutable_data.plames_connection_inited:
             pass
         '''
-        packet = packetsQueue.get(True)
+        packet = mutable_data.packetsQueue.get(True)
 
         output = bytearray(packet._cached_output)
 
-        clientSocket.send(struct.pack(">h", packet.get_id()))
-        clientSocket.send(struct.pack(">i", len(output)))
+        mutable_data.clientSocket.send(struct.pack(">h", packet.get_id()))
+        mutable_data.clientSocket.send(struct.pack(">i", len(output)))
 
-        if isinstance(packet, JavaRequest):
-            clientSocket.send(struct.pack(">q", packet.request_id))
+        if isinstance(packet, JavaRequest) or isinstance(packet, RequestEndpoint):
+            mutable_data.clientSocket.send(struct.pack(">q", packet.request_id))
 
-        clientSocket.send(output)
+        mutable_data.clientSocket.send(output)
 
         del packet._cached_output
 
 
 def __listen():
-    global clientSocket
 
     try:
 
         while True:
-            packet_id = struct.unpack(">h", clientSocket.recv(2, socket.MSG_WAITALL))[0]
-            size = clientSocket.recv(4, socket.MSG_WAITALL)
+            packet_id = struct.unpack(">h", mutable_data.clientSocket.recv(2, socket.MSG_WAITALL))[0]
+            size = mutable_data.clientSocket.recv(4, socket.MSG_WAITALL)
 
             packet = mutable_data.input_packet_registry.get(packet_id)()
 
             if isinstance(packet, JavaRequest) or isinstance(packet, RequestEndpoint):
-                packet.request_id = struct.unpack(">q", clientSocket.recv(8, socket.MSG_WAITALL))[0]
+                packet.request_id = struct.unpack(">q", mutable_data.clientSocket.recv(8, socket.MSG_WAITALL))[0]
 
-            packet.read(clientSocket)
-            packet.on_received()
+            packet.read(mutable_data.clientSocket)
 
-            if isinstance(packet, RequestEndpoint):
-                send(packet)
+            mutable_data.executorQueue.put(packet)
 
     except ConnectionAbortedError:
         __on_disconnect()

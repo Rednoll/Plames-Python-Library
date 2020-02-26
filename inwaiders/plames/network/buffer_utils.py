@@ -409,6 +409,7 @@ def read_dict(input_socket, session):
     field_value = {}
 
     size = read_int(input_socket)
+
     for i in range(0, size):
         field_value.update({read_data(input_socket, session): read_data(input_socket, session)})
 

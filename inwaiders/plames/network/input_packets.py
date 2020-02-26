@@ -16,25 +16,6 @@ class JavaInputPacket(object):
         pass
 
 
-class RequestEntity(JavaInputPacket):
-
-    java_object = None
-
-    def __init__(self):
-        self.request_id = None
-
-    def read(self, input_socket):
-        self.request_id = buffer_utils.read_long(input_socket)
-        self.java_object = buffer_utils.read_data(input_socket, self.session)
-
-    def on_received(self):
-        plames_client.request_data_dict.update({self.request_id: self.java_object})
-        plames_client.request_events_dict.get(self.request_id).set()
-
-
-mutable_data.input_packet_registry.update({0: lambda: RequestEntity()})
-
-
 class Unlock(JavaInputPacket):
 
     request_id = None
@@ -69,9 +50,8 @@ class ConnectionInited(JavaInputPacket):
     def on_received(self):
         mutable_data.plames_connection_inited = True
         
-        if plames_client.connect_lock is not None:
-            plames_client.connect_lock.set()
-
+        if mutable_data.connect_lock is not None:
+            mutable_data.connect_lock.set()
 
 
 mutable_data.input_packet_registry.update({10: lambda: ConnectionInited()})
