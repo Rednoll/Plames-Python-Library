@@ -6,6 +6,8 @@ from inwaiders.plames.network import class_type_utils, plames_client
 
 class_types = class_type_utils
 
+transient_fields = ["__types", "__fields_names", "class_java_name"]
+
 
 def write_utf8(output, _str):
     write_byte_array(output, _str.encode("utf-8"))
@@ -139,6 +141,9 @@ def write_dict(output, _object, session=None):
 
 def write_fields(output, _object, only_changes=False, session=None):
 
+    if not hasattr(_object, "__types"):
+        _object.__types = class_type_utils.get_class_fields_types(_object.class_java_name)
+
     vars_type = _object.__types
 
     if only_changes:
@@ -156,16 +161,26 @@ def write_fields(output, _object, only_changes=False, session=None):
 
     else:
 
-        vars_names = _object.__fields_names
+        if hasattr(_object, "__changed_vars"):
+            vars_names = _object.__changed_vars
+        else:
+            vars_names = list(_object.__dict__.keys())
+
+        for var_name in vars_names:
+            if var_name in transient_fields:
+                vars_names.remove(var_name)
 
         write_int(output, len(vars_names))
 
         for var_name in vars_names:
 
-            var = _object.__dict__["_"+var_name]
+            if hasattr(_object, "__changed_vars"):
+                var = getattr(_object, "_"+var_name)
+            else:
+                var = getattr(_object, var_name)
 
             write_utf8(output, to_camel_case(var_name))
-            write_data(output, var, session, vars_type[var_name])
+            write_data(output, var, session, vars_type[to_camel_case(var_name)])
 
 
 def write_entity(output, entity, session=None):
@@ -605,6 +620,7 @@ def read_fields(input_socket, session):
 
 def to_snake_case(_str):
     return ''.join(['_' + i.lower() if i.isupper() else i for i in _str]).lstrip('_')
+
 
 def to_camel_case(snake_str):
     components = snake_str.split('_')

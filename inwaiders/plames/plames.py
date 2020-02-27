@@ -34,6 +34,7 @@ def main():
     init_modules()
     post_init_modules()
 
+    plames_client.send(output_packets.BootLoaded())
 
 def connect():
     global logger

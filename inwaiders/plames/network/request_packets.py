@@ -12,9 +12,7 @@ class JavaRequest(JavaInputPacket, JavaOutputPacket):
         self.request_id = -1
 
     def on_received(self):
-        mutable_data.request_data_dict.update({self.request_id: self})
-        mutable_data.request_events_dict.get(self.request_id).set()
-
+        pass
 
 class RequestEntity(JavaRequest):
 

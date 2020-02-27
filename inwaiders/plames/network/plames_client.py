@@ -37,6 +37,7 @@ def connect(address, port, lock=True):
 
 
 def send(packet):
+    print("add to queue packet: "+str(packet))
     packet._cached_output = []
     packet.write(packet._cached_output)
     mutable_data.packetsQueue.put(packet)
@@ -48,11 +49,12 @@ def create(entity_name, args=[], rep_args=[]):
 
 def request(request_packet):
 
-    request_id = -1
+    mutable_data.request_id_lock.acquire()
 
-    with mutable_data.request_id_lock:
-        request_id = mutable_data.next_request_id
-        mutable_data.next_request_id += 1
+    request_id = mutable_data.next_request_id
+    mutable_data.next_request_id += 1
+
+    mutable_data.request_id_lock.release()
 
     event = Event()
     mutable_data.request_events_dict.update({request_id: event})
@@ -105,7 +107,7 @@ def __execute():
         packet.on_received()
 
         if isinstance(packet, RequestEndpoint):
-            send(packet)
+            send(packet);
 
 
 def __write_packets():
@@ -127,6 +129,8 @@ def __write_packets():
 
         mutable_data.clientSocket.send(output)
 
+        print("send packet: "+str(packet))
+
         del packet._cached_output
 
 
@@ -147,8 +151,9 @@ def __listen():
 
             mutable_data.executorQueue.put(packet)
 
+            if isinstance(packet, JavaRequest):
+                mutable_data.request_data_dict.update({packet.request_id: packet})
+                mutable_data.request_events_dict.get(packet.request_id).set()
+
     except ConnectionAbortedError:
         __on_disconnect()
-
-
-

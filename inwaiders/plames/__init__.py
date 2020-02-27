@@ -1,5 +1,5 @@
 from multiprocessing import Queue
-from threading import Lock, Event
+from threading import RLock, Event
 
 
 class MutableData(object):
@@ -17,7 +17,7 @@ class MutableData(object):
         self.request_events_dict = {}
         self.request_data_dict = {}
         self.next_request_id = 0
-        self.request_id_lock = Lock()
+        self.request_id_lock = RLock()
         self.sender = None
         self.listener = None
         self.executor = None

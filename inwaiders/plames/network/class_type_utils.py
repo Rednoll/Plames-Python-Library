@@ -42,7 +42,7 @@ def get_class_fields_types(class_java_name):
     if cached is not None:
         return cached
     else:
-        types = plames_client.request(request_packets.ClassTypesRequest(class_java_name))
+        types = plames_client.request(request_packets.ClassTypesRequest(class_java_name)).types
         plames.mutable_data.classes_types.update({class_java_name: types})
         return types
 

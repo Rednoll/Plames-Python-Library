@@ -28,3 +28,9 @@ class PushEntity(JavaOutputPacket):
 
     def get_id(self):
         return 7
+
+
+class BootLoaded(JavaOutputPacket):
+
+    def get_id(self):
+        return 11
