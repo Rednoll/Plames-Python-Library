@@ -11,6 +11,7 @@ from inwaiders.plames.network import output_packets
 from inwaiders.plames.network import buffer_utils
 from inwaiders.plames.network import request_packets
 import logging
+from io import BytesIO
 
 logger = logging.getLogger("Plames.Plames-Client")
 
@@ -29,7 +30,7 @@ def connect(address, port, lock=True):
     mutable_data.listener = threading.Thread(target=__listen)
     mutable_data.listener.start()
 
-    mutable_data.executor = threading.Thread(target=__execute)
+    mutable_data.executor = threading.Thread(target=__execute_func)
     mutable_data.executor.start()
 
     if lock:
@@ -37,8 +38,7 @@ def connect(address, port, lock=True):
 
 
 def send(packet):
-    print("add to queue packet: "+str(packet))
-    packet._cached_output = []
+    packet._cached_output = BytesIO()
     packet.write(packet._cached_output)
     mutable_data.packetsQueue.put(packet)
 
@@ -65,7 +65,11 @@ def request(request_packet):
 
     event.wait()
 
-    return mutable_data.request_data_dict.get(request_id)
+    answer_packet = mutable_data.request_data_dict.get(request_id)
+
+    __execute(answer_packet)
+
+    return answer_packet
 
 
 def request_entity(entity_name, method_name, args, rep_args=[]):
@@ -100,14 +104,27 @@ def __on_disconnect():
     mutable_data.plames_connection_inited = False
 
 
-def __execute():
+def __execute_func():
 
     while True:
         packet = mutable_data.executorQueue.get(True)
-        packet.on_received()
+        __execute(packet)
 
-        if isinstance(packet, RequestEndpoint):
-            send(packet);
+
+def __execute(packet):
+
+    input_stream = BytesIO()
+    input_stream.write(packet._cached_input)
+    input_stream.seek(0)
+
+    packet.read(input_stream)
+
+    input_stream.close()
+
+    packet.on_received()
+
+    if isinstance(packet, RequestEndpoint):
+        send(packet)
 
 
 def __write_packets():
@@ -119,7 +136,7 @@ def __write_packets():
         '''
         packet = mutable_data.packetsQueue.get(True)
 
-        output = bytearray(packet._cached_output)
+        output = packet._cached_output.getvalue()
 
         mutable_data.clientSocket.send(struct.pack(">h", packet.get_id()))
         mutable_data.clientSocket.send(struct.pack(">i", len(output)))
@@ -128,6 +145,8 @@ def __write_packets():
             mutable_data.clientSocket.send(struct.pack(">q", packet.request_id))
 
         mutable_data.clientSocket.send(output)
+
+        packet._cached_output.close()
 
         print("send packet: "+str(packet))
 
@@ -140,20 +159,20 @@ def __listen():
 
         while True:
             packet_id = struct.unpack(">h", mutable_data.clientSocket.recv(2, socket.MSG_WAITALL))[0]
-            size = mutable_data.clientSocket.recv(4, socket.MSG_WAITALL)
+            size = struct.unpack(">i", mutable_data.clientSocket.recv(4, socket.MSG_WAITALL))[0]
 
             packet = mutable_data.input_packet_registry.get(packet_id)()
 
             if isinstance(packet, JavaRequest) or isinstance(packet, RequestEndpoint):
                 packet.request_id = struct.unpack(">q", mutable_data.clientSocket.recv(8, socket.MSG_WAITALL))[0]
 
-            packet.read(mutable_data.clientSocket)
-
-            mutable_data.executorQueue.put(packet)
+            packet._cached_input = mutable_data.clientSocket.recv(size, socket.MSG_WAITALL)
 
             if isinstance(packet, JavaRequest):
                 mutable_data.request_data_dict.update({packet.request_id: packet})
                 mutable_data.request_events_dict.get(packet.request_id).set()
+            else:
+                mutable_data.executorQueue.put(packet)
 
     except ConnectionAbortedError:
         __on_disconnect()

@@ -171,10 +171,11 @@ class Session(object):
                 return True
         return False
 
+
     def get_cache_id(self, _obj):
         for _id in self._cache:
             cell = self._cache.get(_id)
-            if cell.values is _obj:
+            if cell.value is _obj:
                 return _id
         return -1
 

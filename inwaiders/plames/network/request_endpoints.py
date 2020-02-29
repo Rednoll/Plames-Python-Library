@@ -43,7 +43,7 @@ class MessengerCommandsRequest(RequestEndpoint):
 
     def write(self, output):
 
-        buffer_utils.write_dict(output, mutable_data.commands_registry, self.session)
+        buffer_utils.write_dict(output, mutable_data.commands_roots_registry, self.session)
         pass
 
     def get_id(self):

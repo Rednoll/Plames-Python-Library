@@ -2,12 +2,13 @@ from inwaiders.plames.network import buffer_utils
 from inwaiders.plames.network import plames_client
 from inwaiders.plames import plames
 from inwaiders.plames import mutable_data
-
+from inwaiders.plames.command import command_registry
 
 class JavaInputPacket(object):
 
     def __init__(self):
         self.session = plames.Session()
+        self._cached_input = None
 
     def read(self, input_socket):
         pass
@@ -55,3 +56,18 @@ class ConnectionInited(JavaInputPacket):
 
 
 mutable_data.input_packet_registry.update({10: lambda: ConnectionInited()})
+
+
+class RunCommand(JavaInputPacket):
+
+    def read(self, input):
+        self.command_id = buffer_utils.read_short(input)
+        self.profile = buffer_utils.read_entity(input, self.session)
+        self.args = buffer_utils.read_string_array(input)
+
+    def on_received(self):
+        command = command_registry.get_command(self.command_id)
+        command.run(self.profile, self.args)
+
+
+mutable_data.input_packet_registry.update({12: lambda: RunCommand()})
