@@ -6,7 +6,7 @@ from inwaiders.plames.network import class_type_utils, plames_client
 
 class_types = class_type_utils
 
-transient_fields = ["__types", "__fields_names", "class_java_name"]
+transient_fields = ["__types", "__fields_names", "class_java_name", "__s_id"]
 
 
 def write_utf8(output, _str):
@@ -438,9 +438,7 @@ def read_entity(input_stream, session):
     class_name = read_utf8(input_stream)
     super_class_java_name = read_utf8(input_stream)
     s_id = read_int(input_stream)
-    
-    cache_cell = session.get_new_cache_cell()
-
+   
     fields_data = read_fields(input_stream, session)
 
     def push(self, block=False):
@@ -455,9 +453,10 @@ def read_entity(input_stream, session):
     new_object.__fields_names = fields_data[2]
     new_object.__changed_vars = []
     new_object.is_entity = True
-
-    cache_cell.value = new_object
-
+    new_object.__s_id = s_id
+    
+    session.add_object(new_object);
+    
     return new_object
 
 
@@ -466,18 +465,17 @@ def read_object(input_stream, session):
     class_name = read_utf8(input_stream)
     super_class_java_name = read_utf8(input_stream)
     s_id = read_int(input_stream)
-    
-    cache_cell = session.get_new_cache_cell()
-
+   
     fields_data = read_fields(input_stream, session)
 
     new_object = type(class_name, (object,), fields_data[0])()
 
     new_object.class_java_name = class_java_name
     new_object.__types = fields_data[1]
-
-    cache_cell.value = new_object
-
+    new_object.__s_id = s_id
+    
+    session.add_object(new_object)
+    
     return new_object
 
 
@@ -593,27 +591,21 @@ def read_fields(input_stream, session):
                 else:
                     value = plames_client.request_attr(self.class_java_name, self.id, field_name)
                     setattr(self, "_"+field_name, value)
-
-                    value.__trace = trace
-
                     return value
 
             field_value = property(get_f, set_f)
 
         elif field_type == class_types.LINK:
 
-            cache_id = read_int(input_stream)
+            s_id = read_int(input_stream)
 
-            def get_f(self, field_name=field_name, session=session, cache_id=cache_id):
+            def get_f(self, field_name=field_name, session=session, s_id=s_id):
 
                 if hasattr(self, "_"+field_name):
                     return getattr(self, "_"+field_name)
                 else:
-                    value = session.get_from_cache(cache_id)
+                    value = session.get_object(s_id)
                     setattr(self, "_"+field_name, value)
-
-                    value.__trace = trace
-
                     return value
 
             field_value = property(get_f, set_f)
@@ -624,9 +616,6 @@ def read_fields(input_stream, session):
 
                 if hasattr(self, "_"+field_name):
                     value = getattr(self, "_"+field_name)
-
-                    value.__trace = trace
-
                     return value
                 else:
                     return None
