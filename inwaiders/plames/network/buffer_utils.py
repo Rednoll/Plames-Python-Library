@@ -562,7 +562,7 @@ def read_data(input_stream, session, obj_type=None):
     return None
 
 
-def read_fields(input_stream, session, trace):
+def read_fields(input_stream, session, parent_trace):
 
     fields_dict = {}
     fields_types_dict = {}
@@ -584,14 +584,17 @@ def read_fields(input_stream, session, trace):
 
         if class_type_utils.is_lazy(field_type):
 
-            def get_f(self, field_name=field_name):
+            def get_f(self, field_name=field_name, trace=(parent_trace+"."+java_field_name)):
 
                 if hasattr(self, "_"+field_name):
                     return getattr(self, "_"+field_name)
                 else:
-                    f_value = plames_client.request_attr(self.class_java_name, self.id, field_name)
-                    setattr(self, "_"+field_name, f_value)
-                    return f_value
+                    value = plames_client.request_attr(self.class_java_name, self.id, field_name)
+                    setattr(self, "_"+field_name, value)
+
+                    value.__trace = trace
+
+                    return value
 
             field_value = property(get_f, set_f)
 
@@ -599,23 +602,30 @@ def read_fields(input_stream, session, trace):
 
             cache_id = read_int(input_stream)
 
-            def get_f(self, field_name=field_name, session=session, cache_id=cache_id):
+            def get_f(self, field_name=field_name, session=session, cache_id=cache_id, trace=(parent_trace+"."+java_field_name)):
 
                 if hasattr(self, "_"+field_name):
                     return getattr(self, "_"+field_name)
                 else:
                     value = session.get_from_cache(cache_id)
                     setattr(self, "_"+field_name, value)
+
+                    value.__trace = trace
+
                     return value
 
             field_value = property(get_f, set_f)
 
         else:
 
-            def get_f(self, field_name=field_name):
+            def get_f(self, field_name=field_name, trace=(parent_trace+"."+java_field_name)):
 
                 if hasattr(self, "_"+field_name):
-                    return getattr(self, "_"+field_name)
+                    value = getattr(self, "_"+field_name)
+
+                    value.__trace = trace
+
+                    return value
                 else:
                     return None
 
@@ -626,9 +636,6 @@ def read_fields(input_stream, session, trace):
         fields_types_dict.update({field_name: field_type})
         fields_names.append(field_name)
         #print(field_name + ": " + str(field_value))
-
-        if trace is not None:
-            fields_traces.update({field_name: (trace+"."+java_field_name)})
 
     return fields_dict, fields_types_dict, fields_names
 
