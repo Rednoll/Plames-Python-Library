@@ -6,7 +6,7 @@ from inwaiders.plames.network import class_type_utils, plames_client
 
 class_types = class_type_utils
 
-transient_fields = ["__types", "__fields_names", "class_java_name", "__s_id"]
+transient_fields = ["__types", "__fields_names", "class_java_name", "__s_id", "__root"]
 
 
 def write_utf8(output, _str):
@@ -186,11 +186,15 @@ def write_fields(output, _object, only_changes=False, session=None):
 def write_entity(output, entity, session=None):
     write_utf8(output, entity.class_java_name)
     write_long(output, entity.id)
-
-    session.get_new_cache_cell().value = entity
-
+    write_int(output, entity.__s_id)
+    
     write_fields(output, entity, True, session)
 
+def write_object(outout, _object, session=None):
+    write_utf8(output, _object.class_java_name)
+    write_int(output, _object.__s_id)
+    
+    write_fields(output, _object, False, session)
 
 def write_data(output, _object, session=None, type_id=None):
 
@@ -273,11 +277,7 @@ def write_data(output, _object, session=None, type_id=None):
         write_dict(output, _object, session)
 
     elif type_id == class_types.OBJECT:
-        write_utf8(output, _object.class_java_name)
-
-        session.get_new_cache_cell().value = _object
-
-        write_fields(output, _object, False, session)
+        write_object(output, _object, session)
 
     elif type_id == class_types.ENTITY:
         write_entity(output, _object, session)
@@ -433,7 +433,6 @@ def read_dict(input_stream, session):
 
 
 def read_entity(input_stream, session):
-
     class_java_name = read_utf8(input_stream)
     class_name = read_utf8(input_stream)
     super_class_java_name = read_utf8(input_stream)
@@ -460,12 +459,12 @@ def read_entity(input_stream, session):
     return new_object
 
 
-def read_object(input_stream, session):
+def read_object(input_stream, session, root=None):
     class_java_name = read_utf8(input_stream)
     class_name = read_utf8(input_stream)
     super_class_java_name = read_utf8(input_stream)
     s_id = read_int(input_stream)
-   
+
     fields_data = read_fields(input_stream, session)
 
     new_object = type(class_name, (object,), fields_data[0])()
@@ -473,6 +472,7 @@ def read_object(input_stream, session):
     new_object.class_java_name = class_java_name
     new_object.__types = fields_data[1]
     new_object.__s_id = s_id
+    new_object.__root = root
     
     session.add_object(new_object)
     
