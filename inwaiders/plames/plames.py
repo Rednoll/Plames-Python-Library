@@ -161,51 +161,28 @@ def load_modules():
 
 class Session(object):
 
-    _next_cache_id = 0
-    _cache = {}
-
-    def is_cached(self, _obj):
-        for _id in self._cache:
-            cell = self._cache.get(_id)
-            if cell.value is _obj:
-                return True
-        return False
-
-
-    def get_cache_id(self, _obj):
-        for _id in self._cache:
-            cell = self._cache.get(_id)
-            if cell.value is _obj:
-                return _id
-        return -1
-
-
-    def get_from_cache(self, cache_id):
-        cell = self._cache.get(cache_id)
-        result = cell.value
-        assert result is not None, str(cache_id)+" not cached!"
-        return result
-
-    def get_new_cache_cell(self):
-        cache_id = self._get_new_cache_id()
-        cell = Session.Cell(cache_id)
-        self._cache.update({cache_id: cell})
-        return cell
-
-    def _get_new_cache_id(self):
-        current = self._next_cache_id
-        self._next_cache_id += 1
-        return current
-
-    class Cell(object):
-
-        cache_id = None
-        value = None
-
-        def __init__(self, cache_id, _obj=None):
-            self.cache_id = cache_id
-            self.value = _obj
-
-
+    def __init__(self):
+        self.object_map = {}
+        
+    def add_object(self, object, s_id=None):
+        
+        if s_id is None:
+            self.object_map.update({s_id: object})
+            object.__s_id = s_id
+        else:
+            self.object_map.update({object.__s_id: object})
+    
+    def get_object(self, s_id):
+        return self.object_map.get(s_id)
+    
+    def has_object(self, object):
+        
+        if hasattr(object, "__s_id"):
+            return self.get_object(object.__s_id) is non None
+        else:
+            for s_id in self.object_map:   
+                if self.object_map.get(s_id) is object:
+                    return True
+    
 if __name__ == "__main__":
     main()
