@@ -437,7 +437,8 @@ def read_entity(input_stream, session):
     class_java_name = read_utf8(input_stream)
     class_name = read_utf8(input_stream)
     super_class_java_name = read_utf8(input_stream)
-
+    s_id = read_int(input_stream)
+    
     cache_cell = session.get_new_cache_cell()
 
     fields_data = read_fields(input_stream, session)
@@ -464,7 +465,8 @@ def read_object(input_stream, session):
     class_java_name = read_utf8(input_stream)
     class_name = read_utf8(input_stream)
     super_class_java_name = read_utf8(input_stream)
-
+    s_id = read_int(input_stream)
+    
     cache_cell = session.get_new_cache_cell()
 
     fields_data = read_fields(input_stream, session)
@@ -562,7 +564,7 @@ def read_data(input_stream, session, obj_type=None):
     return None
 
 
-def read_fields(input_stream, session, parent_trace):
+def read_fields(input_stream, session):
 
     fields_dict = {}
     fields_types_dict = {}
@@ -584,7 +586,7 @@ def read_fields(input_stream, session, parent_trace):
 
         if class_type_utils.is_lazy(field_type):
 
-            def get_f(self, field_name=field_name, trace=(parent_trace+"."+java_field_name)):
+            def get_f(self, field_name=field_name):
 
                 if hasattr(self, "_"+field_name):
                     return getattr(self, "_"+field_name)
@@ -602,7 +604,7 @@ def read_fields(input_stream, session, parent_trace):
 
             cache_id = read_int(input_stream)
 
-            def get_f(self, field_name=field_name, session=session, cache_id=cache_id, trace=(parent_trace+"."+java_field_name)):
+            def get_f(self, field_name=field_name, session=session, cache_id=cache_id):
 
                 if hasattr(self, "_"+field_name):
                     return getattr(self, "_"+field_name)
@@ -618,7 +620,7 @@ def read_fields(input_stream, session, parent_trace):
 
         else:
 
-            def get_f(self, field_name=field_name, trace=(parent_trace+"."+java_field_name)):
+            def get_f(self, field_name=field_name):
 
                 if hasattr(self, "_"+field_name):
                     value = getattr(self, "_"+field_name)
