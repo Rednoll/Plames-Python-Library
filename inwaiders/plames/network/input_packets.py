@@ -7,7 +7,7 @@ from inwaiders.plames.command import command_registry
 class JavaInputPacket(object):
 
     def __init__(self):
-        self.session = plames.Session()
+        self.session = mutable_data.current_session
         self._cached_input = None
 
     def read(self, input_socket):

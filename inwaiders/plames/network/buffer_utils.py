@@ -2,11 +2,13 @@ import socket
 import struct
 import array
 import sys
+from builtins import hasattr
+
 from inwaiders.plames.network import class_type_utils, plames_client
 
 class_types = class_type_utils
 
-transient_fields = ["__types", "__fields_names", "class_java_name", "__s_id", "__root"]
+transient_fields = ["__types", "__fields_names", "class_java_name", "__s_id", "__root", "__dirty"]
 
 
 def write_utf8(output, _str):
@@ -157,7 +159,7 @@ def write_fields(output, _object, only_changes=False, session=None):
             var = getattr(_object, "_"+var_name)
 
             write_utf8(output, to_camel_case(var_name))
-            write_data(output, var, session, vars_type[to_camel_case(var_name)])
+            write_data(output, var, session, vars_type[var_name])
 
     else:
 
@@ -180,21 +182,27 @@ def write_fields(output, _object, only_changes=False, session=None):
                 var = getattr(_object, var_name)
 
             write_utf8(output, to_camel_case(var_name))
-            write_data(output, var, session, vars_type[to_camel_case(var_name)])
+            write_data(output, var, session, vars_type[var_name])
 
 
 def write_entity(output, entity, session=None):
     write_utf8(output, entity.class_java_name)
     write_long(output, entity.id)
     write_int(output, entity.__s_id)
-    
+
     write_fields(output, entity, True, session)
 
-def write_object(outout, _object, session=None):
+    entity.__dirty = False
+
+
+def write_object(output, _object, session=None):
     write_utf8(output, _object.class_java_name)
     write_int(output, _object.__s_id)
     
-    write_fields(output, _object, False, session)
+    write_fields(output, _object, True, session)
+
+    _object.__dirty = False
+
 
 def write_data(output, _object, session=None, type_id=None):
 
@@ -203,7 +211,7 @@ def write_data(output, _object, session=None, type_id=None):
 
     if class_types.is_cacheable(type_id):
 
-        if session.is_cached(_object):
+        if session.is_mapped(_object):
             write_short(output, class_types.LINK)
             write_int(output, session.get_cache_id(_object))
             return
@@ -433,6 +441,7 @@ def read_dict(input_stream, session):
 
 
 def read_entity(input_stream, session):
+
     class_java_name = read_utf8(input_stream)
     class_name = read_utf8(input_stream)
     super_class_java_name = read_utf8(input_stream)
@@ -445,6 +454,11 @@ def read_entity(input_stream, session):
 
     fields_data[0].update({"push": push})
 
+    def mark_as_dirty(self):
+        self.__dirty = True
+
+    fields_data[0].update({"mark_as_dirty": mark_as_dirty})
+
     new_object = type(class_name, (object,), fields_data[0])()
 
     new_object.class_java_name = class_java_name
@@ -454,12 +468,13 @@ def read_entity(input_stream, session):
     new_object.is_entity = True
     new_object.__s_id = s_id
     
-    session.add_object(new_object);
+    session.add_object(new_object, s_id)
     
     return new_object
 
 
-def read_object(input_stream, session, root=None):
+def read_object(input_stream, session):
+
     class_java_name = read_utf8(input_stream)
     class_name = read_utf8(input_stream)
     super_class_java_name = read_utf8(input_stream)
@@ -467,14 +482,21 @@ def read_object(input_stream, session, root=None):
 
     fields_data = read_fields(input_stream, session)
 
+    def mark_as_dirty(self):
+        self.__dirty = True
+        print("keke")
+
+    fields_data[0].update({"mark_as_dirty": mark_as_dirty})
+
     new_object = type(class_name, (object,), fields_data[0])()
 
     new_object.class_java_name = class_java_name
     new_object.__types = fields_data[1]
+    new_object.__fields_names = fields_data[2]
+    new_object.__changed_vars = []
     new_object.__s_id = s_id
-    new_object.__root = root
     
-    session.add_object(new_object)
+    session.add_object(new_object, s_id)
     
     return new_object
 
@@ -579,8 +601,9 @@ def read_fields(input_stream, session):
 
             setattr(self, "_" + field_name, value)
 
-            if self.__changed_vars.count(field_name) == 0:
+            if field_name not in self.__changed_vars:
                 self.__changed_vars.append(field_name)
+                self.mark_as_dirty()
 
         if class_type_utils.is_lazy(field_type):
 
@@ -589,7 +612,7 @@ def read_fields(input_stream, session):
                 if hasattr(self, "_"+field_name):
                     return getattr(self, "_"+field_name)
                 else:
-                    value = plames_client.request_attr(self.class_java_name, self.id, field_name)
+                    value = plames_client.request_attr(self.class_java_name, self.id, to_camel_case(field_name))
                     setattr(self, "_"+field_name, value)
                     return value
 

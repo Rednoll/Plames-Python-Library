@@ -36,11 +36,19 @@ def main():
 
     plames_client.send(output_packets.BootLoaded())
 
+    print("Try request")
+    test_entity = plames_client.request_entity("TestEntity", "getById", [44804])
+    print(str(test_entity.test_list[0].test_string_a))
+    test_entity.test_list[0].test_string_a = "Lol if it work!"
+    test_entity.push()
+
 def connect():
     global logger
 
     address = client_config["address"]
     port = int(client_config["port"])
+
+    mutable_data.current_session = Session()
 
     logger.info("Connecting to Plames machine "+address+":"+str(port))
     plames_client.connect(address, port)
@@ -164,25 +172,57 @@ class Session(object):
     def __init__(self):
         self.object_map = {}
         
-    def add_object(self, object, s_id=None):
-        
-        if s_id is None:
-            self.object_map.update({s_id: object})
-            object.__s_id = s_id
-        else:
-            self.object_map.update({object.__s_id: object})
+    def add_object(self, object, s_id):
+        self.object_map.update({s_id: object})
+        object.__s_id = s_id
     
     def get_object(self, s_id):
         return self.object_map.get(s_id)
     
-    def has_object(self, object):
+    def is_mapped(self, object):
         
         if hasattr(object, "__s_id"):
-            return self.get_object(object.__s_id) is non None
+            return self.get_object(object.__s_id) is not None
         else:
             for s_id in self.object_map:   
                 if self.object_map.get(s_id) is object:
                     return True
-    
+
+    def build_dependencies_map(self, obj, only_dirty, dependencies=None):
+
+        if dependencies is None:
+            dependencies = []
+
+        if not hasattr(obj, "__dict__"):
+            return
+
+        props = obj.__dict__
+
+        for prop_name in props:
+
+            prop = props[prop_name]
+
+            print("scanned: "+str(type(prop)))
+
+            if hasattr(prop, "__s_id"):
+                if prop not in dependencies:
+                    if prop.__dirty == only_dirty:
+                        dependencies.append(prop)
+                    self.build_dependencies_map(prop, only_dirty, dependencies)
+
+            elif (type(prop) is list) or (type(prop) is tuple):
+                for item in prop:
+                    if item not in dependencies:
+                        if prop.__dirty == only_dirty:
+                            dependencies.append(item)
+                    self.build_dependencies_map(item, only_dirty, dependencies)
+
+            elif type(prop) is dict:
+                for item_key in prop:
+                    self.build_dependencies_map(item_key, only_dirty, dependencies)
+                    self.build_dependencies_map(prop[item_key], only_dirty, dependencies)
+
+        return dependencies
+
 if __name__ == "__main__":
     main()

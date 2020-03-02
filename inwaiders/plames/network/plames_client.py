@@ -38,8 +38,10 @@ def connect(address, port, lock=True):
 
 
 def send(packet):
+    packet.session = mutable_data.current_session
     packet._cached_output = BytesIO()
     packet.write(packet._cached_output)
+    del packet.session
     mutable_data.packetsQueue.put(packet)
 
 

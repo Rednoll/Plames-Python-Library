@@ -1,7 +1,6 @@
 from multiprocessing import Queue
 from threading import RLock, Event
 
-
 class MutableData(object):
 
     def __init__(self):
@@ -23,5 +22,6 @@ class MutableData(object):
         self.listener = None
         self.executor = None
         self.executorQueue = Queue()
+        self.current_session = None
 
 mutable_data = MutableData()

@@ -8,11 +8,12 @@ from inwaiders.plames import mutable_data
 class JavaRequest(JavaInputPacket, JavaOutputPacket):
 
     def __init__(self):
-        self.session = plames.Session()
+        self.session = mutable_data.current_session
         self.request_id = -1
 
     def on_received(self):
         pass
+
 
 class RequestEntity(JavaRequest):
 
@@ -30,8 +31,8 @@ class RequestEntity(JavaRequest):
         buffer_utils.write_list(output, self.args)
         buffer_utils.write_list(output, self.rep_args)
 
-    def read(self, input_socket):
-        self.java_object = buffer_utils.read_data(input_socket, self.session)
+    def read(self, input_stream):
+        self.java_object = buffer_utils.read_data(input_stream, self.session)
 
     def get_id(self):
         return 0
@@ -42,7 +43,7 @@ mutable_data.input_packet_registry.update({0: lambda: RequestEntity()})
 
 class RequestEntityAttr(JavaRequest):
 
-    def __init__(self, entity_name, entity_id, field_name):
+    def __init__(self, entity_name=None, entity_id=None, field_name=None):
         super().__init__()
         self.entity_name = entity_name
         self.entity_id = entity_id

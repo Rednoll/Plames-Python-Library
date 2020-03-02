@@ -1,12 +1,11 @@
 from inwaiders.plames.network import buffer_utils
-from inwaiders.plames import plames
-
+from inwaiders.plames import plames, mutable_data
 
 class JavaOutputPacket(object):
 
     def __init__(self):
         self._cached_output = None
-        self.session = plames.Session()
+        self.session = mutable_data.current_session
 
     def write(self, output):
         pass
@@ -23,7 +22,19 @@ class PushEntity(JavaOutputPacket):
 
     def write(self, output):
         buffer_utils.write_long(output, self.request_id)
-        buffer_utils.write_entity(output, self.entity)
+        buffer_utils.write_entity(output, self.entity, self.session)
+
+        dependencies = self.session.build_dependencies_map(self.entity, True)
+
+        print("dependencies count: "+str(len(dependencies)))
+
+        buffer_utils.write_int(output, len(dependencies))
+
+        for dep in dependencies:
+
+            buffer_utils.write_int(output, dep.__s_id)
+            buffer_utils.write_fields(output, dep, True, self.session)
+
         del self.entity
 
     def get_id(self):
