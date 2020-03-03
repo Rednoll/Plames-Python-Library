@@ -188,6 +188,14 @@ class Session(object):
                 if self.object_map.get(s_id) is object:
                     return True
 
+    def __add_to_dep_map(self, obj, only_dirty, deps):
+    
+        if hasattr(obj, "__dict__") and hasattr(obj, "__s_id"):
+            if obj not in dependencies:
+                if (not only_dirty) or (only_dirty and obj.__dirty):
+                    dependencies.append(obj)
+
+
     def build_dependencies_map(self, obj, only_dirty, dependencies=None):
 
         if dependencies is None:
@@ -204,23 +212,16 @@ class Session(object):
 
             print("scanned: "+str(type(prop)))
 
-            if hasattr(prop, "__s_id"):
-                if prop not in dependencies:
-                    if prop.__dirty == only_dirty:
-                        dependencies.append(prop)
-                    self.build_dependencies_map(prop, only_dirty, dependencies)
+            self.__add_to_dep_map(prop, only_dirty, dependencies)
 
             elif (type(prop) is list) or (type(prop) is tuple):
                 for item in prop:
-                    if item not in dependencies:
-                        if prop.__dirty == only_dirty:
-                            dependencies.append(item)
-                    self.build_dependencies_map(item, only_dirty, dependencies)
+                    self.__add_to_dep_map(item, only_dirty, dependencies)
 
             elif type(prop) is dict:
                 for item_key in prop:
-                    self.build_dependencies_map(item_key, only_dirty, dependencies)
-                    self.build_dependencies_map(prop[item_key], only_dirty, dependencies)
+                    self.__add_to_dep_map(item_key, only_dirty, dependencies)
+                    self.__add_to_dep_map(prop[item_key], only_dirty, dependencies)
 
         return dependencies
 
