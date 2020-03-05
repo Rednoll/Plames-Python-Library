@@ -36,11 +36,13 @@ def main():
 
     plames_client.send(output_packets.BootLoaded())
 
+    #'''
     print("Try request")
     test_entity = plames_client.request_entity("TestEntity", "getById", [44804])
     print(str(test_entity.test_list[0].test_string_a))
     test_entity.test_list[0].test_string_a = "Lol if it work!"
     test_entity.push()
+    #'''
 
 def connect():
     global logger
@@ -174,15 +176,15 @@ class Session(object):
         
     def add_object(self, object, s_id):
         self.object_map.update({s_id: object})
-        object.__s_id = s_id
+        object._s_id = s_id
     
     def get_object(self, s_id):
         return self.object_map.get(s_id)
     
     def is_mapped(self, object):
         
-        if hasattr(object, "__s_id"):
-            return self.get_object(object.__s_id) is not None
+        if hasattr(object, "_s_id"):
+            return self.get_object(object._s_id) is not None
         else:
             for s_id in self.object_map:   
                 if self.object_map.get(s_id) is object:
@@ -190,10 +192,12 @@ class Session(object):
 
     def __add_to_dep_map(self, obj, only_dirty, deps):
     
-        if hasattr(obj, "__dict__") and hasattr(obj, "__s_id"):
-            if obj not in dependencies:
-                if (not only_dirty) or (only_dirty and obj.__dirty):
-                    dependencies.append(obj)
+        if hasattr(obj, "__dict__") and hasattr(obj, "_s_id"):
+            if obj not in deps:
+                if not only_dirty:
+                    deps.append(obj)
+                elif only_dirty and hasattr(obj, "_dirty") and obj._dirty is True:
+                    deps.append(obj)
 
 
     def build_dependencies_map(self, obj, only_dirty, dependencies=None):
@@ -210,11 +214,7 @@ class Session(object):
 
             prop = props[prop_name]
 
-            print("scanned: "+str(type(prop)))
-
-            self.__add_to_dep_map(prop, only_dirty, dependencies)
-
-            elif (type(prop) is list) or (type(prop) is tuple):
+            if (type(prop) is list) or (type(prop) is tuple):
                 for item in prop:
                     self.__add_to_dep_map(item, only_dirty, dependencies)
 
@@ -223,7 +223,12 @@ class Session(object):
                     self.__add_to_dep_map(item_key, only_dirty, dependencies)
                     self.__add_to_dep_map(prop[item_key], only_dirty, dependencies)
 
+            else:
+                self.__add_to_dep_map(prop, only_dirty, dependencies)
+                self.build_dependencies_map(prop, only_dirty, dependencies)
+
         return dependencies
+
 
 if __name__ == "__main__":
     main()

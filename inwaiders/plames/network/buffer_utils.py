@@ -8,7 +8,7 @@ from inwaiders.plames.network import class_type_utils, plames_client
 
 class_types = class_type_utils
 
-transient_fields = ["__types", "__fields_names", "class_java_name", "__s_id", "__root", "__dirty"]
+transient_fields = ["__types", "__fields_names", "class_java_name", "_s_id", "__root", "_dirty"]
 
 
 def write_utf8(output, _str):
@@ -146,9 +146,9 @@ def write_fields(output, _object, only_changes=False, session=None):
     if not hasattr(_object, "__types"):
         _object.__types = class_type_utils.get_class_fields_types(_object.class_java_name)
 
-    vars_type = _object.__types
+    vars_types = _object.__types
 
-    if only_changes:
+    if only_changes and hasattr(_object, "__changed_vars"):
 
         changed_vars = _object.__changed_vars
 
@@ -159,7 +159,7 @@ def write_fields(output, _object, only_changes=False, session=None):
             var = getattr(_object, "_"+var_name)
 
             write_utf8(output, to_camel_case(var_name))
-            write_data(output, var, session, vars_type[var_name])
+            write_data(output, var, session, vars_types[to_camel_case(var_name)])
 
     else:
 
@@ -182,26 +182,30 @@ def write_fields(output, _object, only_changes=False, session=None):
                 var = getattr(_object, var_name)
 
             write_utf8(output, to_camel_case(var_name))
-            write_data(output, var, session, vars_type[var_name])
+            write_data(output, var, session, vars_types[to_camel_case(var_name)])
 
 
 def write_entity(output, entity, session=None):
     write_utf8(output, entity.class_java_name)
     write_long(output, entity.id)
-    write_int(output, entity.__s_id)
+    write_int(output, entity._s_id)
 
     write_fields(output, entity, True, session)
 
-    entity.__dirty = False
+    entity._dirty = False
 
 
 def write_object(output, _object, session=None):
     write_utf8(output, _object.class_java_name)
-    write_int(output, _object.__s_id)
-    
+
+    if hasattr(_object, "_s_id"):
+        write_int(output, _object._s_id)
+    else:
+        write_int(output, -1)
+
     write_fields(output, _object, True, session)
 
-    _object.__dirty = False
+    _object._dirty = False
 
 
 def write_data(output, _object, session=None, type_id=None):
@@ -440,6 +444,25 @@ def read_dict(input_stream, session):
     return field_value
 
 
+def read_method(input, subject):
+
+    method_name = read_utf8(input)
+
+    def method(subject=subject, method_name=method_name, *args):
+        return plames_client.request_run_method(subject._s_id, method_name, args)
+
+    setattr(subject, to_snake_case(method_name), method)
+
+
+def read_methods(input, subject):
+
+    count = read_int(input)
+
+    for i in range(0, count):
+
+        read_method(input, subject)
+
+
 def read_entity(input_stream, session):
 
     class_java_name = read_utf8(input_stream)
@@ -455,18 +478,20 @@ def read_entity(input_stream, session):
     fields_data[0].update({"push": push})
 
     def mark_as_dirty(self):
-        self.__dirty = True
+        self._dirty = True
 
     fields_data[0].update({"mark_as_dirty": mark_as_dirty})
 
     new_object = type(class_name, (object,), fields_data[0])()
+
+    read_methods(input_stream, new_object)
 
     new_object.class_java_name = class_java_name
     new_object.__types = fields_data[1]
     new_object.__fields_names = fields_data[2]
     new_object.__changed_vars = []
     new_object.is_entity = True
-    new_object.__s_id = s_id
+    new_object._s_id = s_id
     
     session.add_object(new_object, s_id)
     
@@ -483,18 +508,20 @@ def read_object(input_stream, session):
     fields_data = read_fields(input_stream, session)
 
     def mark_as_dirty(self):
-        self.__dirty = True
+        self._dirty = True
         print("keke")
 
     fields_data[0].update({"mark_as_dirty": mark_as_dirty})
 
     new_object = type(class_name, (object,), fields_data[0])()
 
+    read_methods(input_stream, new_object)
+
     new_object.class_java_name = class_java_name
     new_object.__types = fields_data[1]
     new_object.__fields_names = fields_data[2]
     new_object.__changed_vars = []
-    new_object.__s_id = s_id
+    new_object._s_id = s_id
     
     session.add_object(new_object, s_id)
     
@@ -612,7 +639,7 @@ def read_fields(input_stream, session):
                 if hasattr(self, "_"+field_name):
                     return getattr(self, "_"+field_name)
                 else:
-                    value = plames_client.request_attr(self.class_java_name, self.id, to_camel_case(field_name))
+                    value = plames_client.request_attr(self._s_id, to_camel_case(field_name))
                     setattr(self, "_"+field_name, value)
                     return value
 
@@ -647,7 +674,7 @@ def read_fields(input_stream, session):
             field_value = property(get_f, set_f)
 
         fields_dict.update({field_name: field_value})
-        fields_types_dict.update({field_name: field_type})
+        fields_types_dict.update({to_camel_case(field_name): field_type})
         fields_names.append(field_name)
         #print(field_name + ": " + str(field_value))
 

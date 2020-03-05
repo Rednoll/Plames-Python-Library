@@ -5,7 +5,6 @@ class JavaOutputPacket(object):
 
     def __init__(self):
         self._cached_output = None
-        self.session = mutable_data.current_session
 
     def write(self, output):
         pass
@@ -26,13 +25,11 @@ class PushEntity(JavaOutputPacket):
 
         dependencies = self.session.build_dependencies_map(self.entity, True)
 
-        print("dependencies count: "+str(len(dependencies)))
-
         buffer_utils.write_int(output, len(dependencies))
 
         for dep in dependencies:
 
-            buffer_utils.write_int(output, dep.__s_id)
+            buffer_utils.write_int(output, dep._s_id)
             buffer_utils.write_fields(output, dep, True, self.session)
 
         del self.entity

@@ -8,7 +8,6 @@ from inwaiders.plames import mutable_data
 class JavaRequest(JavaInputPacket, JavaOutputPacket):
 
     def __init__(self):
-        self.session = mutable_data.current_session
         self.request_id = -1
 
     def on_received(self):
@@ -43,15 +42,13 @@ mutable_data.input_packet_registry.update({0: lambda: RequestEntity()})
 
 class RequestEntityAttr(JavaRequest):
 
-    def __init__(self, entity_name=None, entity_id=None, field_name=None):
+    def __init__(self, s_id=None, field_name=None):
         super().__init__()
-        self.entity_name = entity_name
-        self.entity_id = entity_id
+        self.s_id = s_id
         self.field_name = field_name
 
     def write(self, output):
-        buffer_utils.write_utf8(output, self.entity_name)
-        buffer_utils.write_long(output, self.entity_id)
+        buffer_utils.write_int(output, self.s_id)
         buffer_utils.write_utf8(output, self.field_name)
 
     def read(self, input_socket):
@@ -105,3 +102,27 @@ class ClassTypesRequest(JavaRequest):
 
 
 mutable_data.input_packet_registry.update({9: lambda: ClassTypesRequest()})
+
+
+class RunMethodRequest(JavaRequest):
+
+    def __init__(self, s_id=None, method_name=None, args=None):
+        super().__init__()
+        self.s_id = s_id
+        self.method_name = method_name
+        self.args = args
+        self.result = None
+
+    def write(self, output):
+        buffer_utils.write_int(output, self.s_id)
+        buffer_utils.write_utf8(output, self.method_name)
+        buffer_utils.write_list(output, self.args)
+
+    def read(self, input):
+        self.result = buffer_utils.read_data(input, self.session)
+
+    def get_id(self):
+        return 13
+
+
+mutable_data.input_packet_registry.update({13: lambda: RunMethodRequest()})

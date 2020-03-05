@@ -78,8 +78,12 @@ def request_entity(entity_name, method_name, args, rep_args=[]):
     return request(request_packets.RequestEntity(entity_name, method_name, args, rep_args)).java_object
 
 
-def request_attr(entity_name, entity_id, field_name):
-    return request(request_packets.RequestEntityAttr(entity_name, entity_id, field_name)).java_object
+def request_attr(s_id, field_name):
+    return request(request_packets.RequestEntityAttr(s_id, field_name)).java_object
+
+
+def request_run_method(s_id, method_name, args):
+    return request(request_packets.RunMethodRequest(s_id, method_name, args)).result
 
 
 def push(entity, blocking=False):
@@ -119,6 +123,8 @@ def __execute(packet):
     input_stream.write(packet._cached_input)
     input_stream.seek(0)
 
+    packet.session = mutable_data.current_session
+
     packet.read(input_stream)
 
     input_stream.close()
@@ -128,6 +134,7 @@ def __execute(packet):
     if isinstance(packet, RequestEndpoint):
         send(packet)
 
+    packet.session = None
 
 def __write_packets():
 
@@ -137,6 +144,8 @@ def __write_packets():
             pass
         '''
         packet = mutable_data.packetsQueue.get(True)
+
+        packet.session = mutable_data.current_session
 
         output = packet._cached_output.getvalue()
 
@@ -153,6 +162,7 @@ def __write_packets():
         print("send packet: "+str(packet))
 
         del packet._cached_output
+        packet.session = None
 
 
 def __listen():

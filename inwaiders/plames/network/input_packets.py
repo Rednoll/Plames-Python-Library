@@ -7,7 +7,6 @@ from inwaiders.plames.command import command_registry
 class JavaInputPacket(object):
 
     def __init__(self):
-        self.session = mutable_data.current_session
         self._cached_input = None
 
     def read(self, input_socket):
@@ -58,7 +57,7 @@ class ConnectionInited(JavaInputPacket):
 mutable_data.input_packet_registry.update({10: lambda: ConnectionInited()})
 
 
-class RunCommand(JavaInputPacket):
+class RunMessengerCommand(JavaInputPacket):
 
     def read(self, input):
         self.command_id = buffer_utils.read_short(input)
@@ -70,4 +69,4 @@ class RunCommand(JavaInputPacket):
         command.run(self.profile, self.args)
 
 
-mutable_data.input_packet_registry.update({12: lambda: RunCommand()})
+mutable_data.input_packet_registry.update({12: lambda: RunMessengerCommand()})
