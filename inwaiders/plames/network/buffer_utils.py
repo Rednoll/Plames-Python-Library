@@ -217,7 +217,7 @@ def write_data(output, _object, session=None, type_id=None):
 
         if session.is_mapped(_object):
             write_short(output, class_types.LINK)
-            write_int(output, session.get_cache_id(_object))
+            write_int(output, _object._s_id)
             return
 
     write_short(output, type_id);
@@ -444,24 +444,24 @@ def read_dict(input_stream, session):
     return field_value
 
 
-def read_method(input, subject):
+def read_methods(input):
 
-    method_name = read_utf8(input)
-
-    def method(subject=subject, method_name=method_name, *args):
-        return plames_client.request_run_method(subject._s_id, method_name, args)
-
-    setattr(subject, to_snake_case(method_name), method)
-
-
-def read_methods(input, subject):
+    methods = {}
 
     count = read_int(input)
 
     for i in range(0, count):
 
-        read_method(input, subject)
+        method_name = read_utf8(input)
 
+        def method(self, *args, method_name=method_name):
+            return plames_client.request_run_method(self._s_id, method_name, args)
+
+        snake_name = to_snake_case(method_name)
+
+        methods.update({snake_name: method})
+
+    return methods
 
 def read_entity(input_stream, session):
 
@@ -472,19 +472,21 @@ def read_entity(input_stream, session):
    
     fields_data = read_fields(input_stream, session)
 
+    object_dict = fields_data[0].copy()
+
+    object_dict.update(read_methods(input_stream))
+
     def push(self, block=False):
         plames_client.push(self, block)
 
-    fields_data[0].update({"push": push})
+    object_dict.update({"push": push})
 
     def mark_as_dirty(self):
         self._dirty = True
 
-    fields_data[0].update({"mark_as_dirty": mark_as_dirty})
+    object_dict.update({"mark_as_dirty": mark_as_dirty})
 
-    new_object = type(class_name, (object,), fields_data[0])()
-
-    read_methods(input_stream, new_object)
+    new_object = type(class_name, (object,), object_dict)()
 
     new_object.class_java_name = class_java_name
     new_object.__types = fields_data[1]
@@ -501,21 +503,27 @@ def read_entity(input_stream, session):
 def read_object(input_stream, session):
 
     class_java_name = read_utf8(input_stream)
-    class_name = read_utf8(input_stream)
+    simple_class_name = read_utf8(input_stream)
     super_class_java_name = read_utf8(input_stream)
     s_id = read_int(input_stream)
 
     fields_data = read_fields(input_stream, session)
 
+    object_dict = fields_data[0].copy()
+
+    object_dict.update(read_methods(input_stream))
+
     def mark_as_dirty(self):
         self._dirty = True
-        print("keke")
 
-    fields_data[0].update({"mark_as_dirty": mark_as_dirty})
+    object_dict.update({"mark_as_dirty": mark_as_dirty})
 
-    new_object = type(class_name, (object,), fields_data[0])()
+    def push(self, block=False):
+        plames_client.push(self, block)
 
-    read_methods(input_stream, new_object)
+    object_dict.update({"push": push})
+
+    new_object = type(simple_class_name, (object,), object_dict)()
 
     new_object.class_java_name = class_java_name
     new_object.__types = fields_data[1]
@@ -525,6 +533,42 @@ def read_object(input_stream, session):
     
     session.add_object(new_object, s_id)
     
+    return new_object
+
+
+def read_static(input_stream, session):
+
+    class_java_name = read_utf8(input_stream)
+    simple_class_name = read_utf8(input_stream)
+    s_id = read_int(input_stream)
+
+    fields_data = read_fields(input_stream, session)
+
+    object_dict = fields_data[0].copy()
+
+    object_dict.update(read_methods(input_stream))
+
+    def mark_as_dirty(self):
+        self._dirty = True
+
+    object_dict.update({"mark_as_dirty": mark_as_dirty})
+
+    def push(self, block=True):
+        plames_client.push(self, block)
+
+    object_dict.update({"push": push})
+
+    new_object = type(simple_class_name, (object,), object_dict)()
+
+    new_object.class_java_name = class_java_name
+    new_object.__types = fields_data[1]
+    new_object.__fields_names = fields_data[2]
+    new_object.__changed_vars = []
+    new_object._s_id = s_id
+    new_object.is_static = True
+
+    session.add_object(new_object, s_id)
+
     return new_object
 
 
@@ -607,6 +651,9 @@ def read_data(input_stream, session, obj_type=None):
 
     elif obj_type == class_types.ENTITY:
         return read_entity(input_stream, session)
+
+    elif obj_type == class_types.STATIC:
+        return read_static(input_stream, session)
 
     return None
 

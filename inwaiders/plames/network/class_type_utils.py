@@ -1,6 +1,7 @@
 import array
 from inwaiders.plames import plames
 
+STATIC = -4
 LINK = -3
 ENTITY = -2
 OBJECT = -1
@@ -82,6 +83,8 @@ def get_class_type(obj):
         return MAP_TYPE
     elif hasattr(obj, "is_entity") and obj.is_entity:
         return ENTITY
+    elif hasattr(obj, "is_static") and obj.is_static:
+        return STATIC
 
     return OBJECT
 

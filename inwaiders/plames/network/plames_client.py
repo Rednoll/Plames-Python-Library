@@ -78,6 +78,10 @@ def request_entity(entity_name, method_name, args, rep_args=[]):
     return request(request_packets.RequestEntity(entity_name, method_name, args, rep_args)).java_object
 
 
+def request_static(static_name):
+    return request(request_packets.RequestStatic(static_name)).static
+
+
 def request_attr(s_id, field_name):
     return request(request_packets.RequestEntityAttr(s_id, field_name)).java_object
 
@@ -86,10 +90,14 @@ def request_run_method(s_id, method_name, args):
     return request(request_packets.RunMethodRequest(s_id, method_name, args)).result
 
 
-def push(entity, blocking=False):
+def push(object, blocking=False):
 
     if not blocking:
-        send(output_packets.PushEntity(entity))
+
+        if hasattr(object, "is_entity") and object.is_entity:
+            send(output_packets.PushEntity(object))
+        else:
+            send(output_packets.PushObject(object))
     else:
         request_id = -1
 
@@ -100,7 +108,10 @@ def push(entity, blocking=False):
         event = Event()
         mutable_data.request_events_dict.update({request_id: event})
 
-        send(output_packets.PushEntity(entity, request_id))
+        if hasattr(object, "is_entity") and object.is_entity:
+            send(output_packets.PushEntity(object, request_id))
+        else:
+            send(output_packets.PushObject(object, request_id))
 
         event.wait()
 

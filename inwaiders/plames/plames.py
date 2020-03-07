@@ -37,11 +37,10 @@ def main():
     plames_client.send(output_packets.BootLoaded())
 
     #'''
-    print("Try request")
-    test_entity = plames_client.request_entity("TestEntity", "getById", [44804])
-    print(str(test_entity.test_list[0].test_string_a))
-    test_entity.test_list[0].test_string_a = "Lol if it work!"
-    test_entity.push()
+    test_static = plames_client.request_static("com.inwaiders.plames.rost.test.entity.TestStaticClass")
+    test_static.test_static_string = "changed!"
+    test_static.push()
+    print(test_static.test_static_method())
     #'''
 
 def connect():
@@ -180,7 +179,7 @@ class Session(object):
     
     def get_object(self, s_id):
         return self.object_map.get(s_id)
-    
+
     def is_mapped(self, object):
         
         if hasattr(object, "_s_id"):

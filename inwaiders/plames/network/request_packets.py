@@ -116,7 +116,9 @@ class RunMethodRequest(JavaRequest):
     def write(self, output):
         buffer_utils.write_int(output, self.s_id)
         buffer_utils.write_utf8(output, self.method_name)
-        buffer_utils.write_list(output, self.args)
+        buffer_utils.write_list(output, self.args, self.session)
+
+        del self.args
 
     def read(self, input):
         self.result = buffer_utils.read_data(input, self.session)
@@ -126,3 +128,24 @@ class RunMethodRequest(JavaRequest):
 
 
 mutable_data.input_packet_registry.update({13: lambda: RunMethodRequest()})
+
+
+class RequestStatic(JavaRequest):
+
+    def __init__(self, static_name=None):
+        super().__init__()
+        self.static_name = static_name
+        self.static = None
+
+    def write(self, output):
+        buffer_utils.write_utf8(output, self.static_name)
+
+    def read(self, input):
+        self.static = buffer_utils.read_data(input, self.session)
+
+    def get_id(self):
+        return 14
+
+
+mutable_data.input_packet_registry.update({14: lambda: RequestStatic()})
+

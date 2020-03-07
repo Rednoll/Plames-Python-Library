@@ -38,6 +38,33 @@ class PushEntity(JavaOutputPacket):
         return 7
 
 
+class PushObject(JavaOutputPacket):
+
+    def __init__(self, object, request_id=-1):
+        self.object = object
+        self.request_id = request_id
+
+    def write(self, output):
+        buffer_utils.write_long(output, self.request_id)
+        buffer_utils.write_int(output, self.object._s_id)
+
+        buffer_utils.write_fields(output, self.object, True, self.session)
+
+        dependencies = self.session.build_dependencies_map(self.object, True)
+
+        buffer_utils.write_int(output, len(dependencies))
+
+        for dep in dependencies:
+
+            buffer_utils.write_int(output, dep._s_id)
+            buffer_utils.write_fields(output, dep, True, self.session)
+
+        del self.object
+
+    def get_id(self):
+        return 15
+
+
 class BootLoaded(JavaOutputPacket):
 
     def get_id(self):
