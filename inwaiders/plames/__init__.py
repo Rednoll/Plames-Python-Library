@@ -22,6 +22,7 @@ class MutableData(object):
         self.listener = None
         self.executor = None
         self.executorQueue = Queue()
-        self.current_session = None
+        self.environment = None
+        self.hyper_tasks_queue = Queue()
 
 mutable_data = MutableData()

@@ -65,8 +65,13 @@ class RunMessengerCommand(JavaInputPacket):
         self.args = buffer_utils.read_string_array(input)
 
     def on_received(self):
+
         command = command_registry.get_command(self.command_id)
-        command.run(self.profile, self.args)
+
+        def run(command=command, profile=self.profile, args=self.args):
+            command.run(profile, args)
+
+        plames.add_hyper_task(run)
 
 
 mutable_data.input_packet_registry.update({12: lambda: RunMessengerCommand()})

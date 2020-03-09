@@ -1,3 +1,5 @@
+from pip._internal import req
+
 from inwaiders.plames.module.module_base import ModuleBase
 import sys
 import os
@@ -5,11 +7,13 @@ import importlib
 from zipfile import ZipFile
 from inwaiders.plames.network import plames_client
 from inwaiders.plames.network import output_packets
+from inwaiders.plames.network import request_packets
 import logging
 from inwaiders.plames.command import command
 import configparser
 import time
 from inwaiders.plames import mutable_data
+import threading
 
 logger = None
 config_parser = configparser.ConfigParser()
@@ -17,9 +21,11 @@ client_config = None
 
 modules = []
 
+hyper_task_executor = None
+
 
 def main():
-    global logger
+    global logger, hyper_task_executor
 
     init_logger()
     load_configs()
@@ -34,7 +40,12 @@ def main():
     init_modules()
     post_init_modules()
 
+    hyper_task_executor = threading.Thread(target=__run_hyper_task_cycle())
+    hyper_task_executor.start()
+
     plames_client.send(output_packets.BootLoaded())
+
+    mutable_data.environment.terminate()
 
     #'''
     test_static = plames_client.request_static("com.inwaiders.plames.rost.test.entity.TestStaticClass")
@@ -43,13 +54,41 @@ def main():
     print(test_static.test_static_method())
     #'''
 
+
+def add_hyper_task(runnable):
+
+    hyper = HyperTask()
+    hyper.task = runnable
+
+    mutable_data.hyper_tasks_queue.put(hyper)
+
+
+def __run_hyper_task_cycle():
+
+    while True:
+        task = mutable_data.hyper_tasks_queue.get(True)
+        __run_hyper_task(task)
+
+
+def __run_hyper_task(hyper_task):
+
+    mutable_data.environment = Environment()
+    mutable_data.environment.init()
+
+    hyper_task.run()
+
+    mutable_data.environment.terminate()
+
+    del mutable_data.environment
+
 def connect():
     global logger
 
     address = client_config["address"]
     port = int(client_config["port"])
 
-    mutable_data.current_session = Session()
+    mutable_data.environment = MockEnvironment()
+    mutable_data.environment.init()
 
     logger.info("Connecting to Plames machine "+address+":"+str(port))
     plames_client.connect(address, port)
@@ -168,11 +207,55 @@ def load_modules():
     logger.info("Load complete!")
 
 
-class Session(object):
+class HyperTask(object):
+
+    def __init__(self, task=None):
+        self.task = task
+
+    def run(self):
+        self.task()
+
+
+class Environment(object):
+
+    def __init__(self):
+        self.network_session = NetworkSession()
+
+    def init(self):
+        plames_client.request(request_packets.RequestCreateEnvironment())
+
+    def terminate(self):
+        self.flush()
+        self.network_session.terminate()
+        plames_client.request(request_packets.RequestTerminateEnvironment())
+
+    def flush(self):
+        self.network_session.flush()
+
+    def __del__(self):
+        del self.network_session
+
+
+class MockEnvironment(Environment):
+
+    def init(self):
+        pass
+
+    def terminate(self):
+        plames_client.request(request_packets.RequestTerminateEnvironment())
+
+    def flush(self):
+        pass
+
+
+class NetworkSession(object):
 
     def __init__(self):
         self.object_map = {}
-        
+
+    def terminate(self):
+        del self.object_map
+
     def add_object(self, object, s_id):
         self.object_map.update({s_id: object})
         object._s_id = s_id
@@ -189,6 +272,16 @@ class Session(object):
                 if self.object_map.get(s_id) is object:
                     return True
 
+    def flush(self):
+
+        object_map = self.object_map
+
+        for object_s_id in object_map:
+            obj = object_map.get(object_s_id)
+
+            if obj._dirty:
+                obj.push()
+
     def __add_to_dep_map(self, obj, only_dirty, deps):
     
         if hasattr(obj, "__dict__") and hasattr(obj, "_s_id"):
@@ -197,7 +290,6 @@ class Session(object):
                     deps.append(obj)
                 elif only_dirty and hasattr(obj, "_dirty") and obj._dirty is True:
                     deps.append(obj)
-
 
     def build_dependencies_map(self, obj, only_dirty, dependencies=None):
 

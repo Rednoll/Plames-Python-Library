@@ -38,7 +38,7 @@ def connect(address, port, lock=True):
 
 
 def send(packet):
-    packet.session = mutable_data.current_session
+    packet.session = mutable_data.environment.network_session
     packet._cached_output = BytesIO()
     packet.write(packet._cached_output)
     del packet.session
@@ -134,7 +134,7 @@ def __execute(packet):
     input_stream.write(packet._cached_input)
     input_stream.seek(0)
 
-    packet.session = mutable_data.current_session
+    packet.session = mutable_data.environment.network_session
 
     packet.read(input_stream)
 
@@ -156,7 +156,7 @@ def __write_packets():
         '''
         packet = mutable_data.packetsQueue.get(True)
 
-        packet.session = mutable_data.current_session
+        packet.session = mutable_data.environment.network_session
 
         output = packet._cached_output.getvalue()
 
@@ -170,7 +170,7 @@ def __write_packets():
 
         packet._cached_output.close()
 
-        print("send packet: "+str(packet))
+        #print("send packet: "+str(packet))
 
         del packet._cached_output
         packet.session = None

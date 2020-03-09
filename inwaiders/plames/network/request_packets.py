@@ -149,3 +149,37 @@ class RequestStatic(JavaRequest):
 
 mutable_data.input_packet_registry.update({14: lambda: RequestStatic()})
 
+
+class RequestCreateEnvironment(JavaRequest):
+
+    def __init__(self):
+        super().__init__()
+        self.environment_id = None
+
+    def write(self, output):
+        pass
+
+    def read(self, input_socket):
+        self.environment_id = buffer_utils.read_long(input_socket)
+
+    def get_id(self):
+        return 16
+
+
+mutable_data.input_packet_registry.update({16: lambda: RequestCreateEnvironment()})
+
+
+class RequestTerminateEnvironment(JavaRequest):
+
+    def __init__(self, env_id):
+        super().__init__()
+        self.environment_id = env_id
+
+    def write(self, output):
+        buffer_utils.write_int(output, self.environment_id)
+
+    def get_id(self):
+        return 17
+
+
+mutable_data.input_packet_registry.update({17: lambda: RequestTerminateEnvironment()})
