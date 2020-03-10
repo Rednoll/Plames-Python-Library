@@ -494,7 +494,8 @@ def read_entity(input_stream, session):
     new_object.__changed_vars = []
     new_object.is_entity = True
     new_object._s_id = s_id
-    
+    new_object._dirty = False
+
     session.add_object(new_object, s_id)
     
     return new_object
@@ -530,7 +531,8 @@ def read_object(input_stream, session):
     new_object.__fields_names = fields_data[2]
     new_object.__changed_vars = []
     new_object._s_id = s_id
-    
+    new_object._dirty = False
+
     session.add_object(new_object, s_id)
     
     return new_object
@@ -566,6 +568,7 @@ def read_static(input_stream, session):
     new_object.__changed_vars = []
     new_object._s_id = s_id
     new_object.is_static = True
+    new_object._dirty = False
 
     session.add_object(new_object, s_id)
 

@@ -215,14 +215,16 @@ class Environment(object):
 
     def __init__(self):
         self.network_session = NetworkSession()
+        self.id = -1
 
     def init(self):
-        plames_client.request(request_packets.RequestCreateEnvironment())
+        answer = plames_client.request(request_packets.RequestCreateEnvironment())
+        self.id = answer.environment_id
 
     def terminate(self):
         self.flush()
         self.network_session.terminate()
-        plames_client.request(request_packets.RequestTerminateEnvironment())
+        plames_client.request(request_packets.RequestTerminateEnvironment(self.id))
 
     def flush(self):
         self.network_session.flush()
@@ -242,6 +244,7 @@ class NetworkSession(object):
     def add_object(self, object, s_id):
         self.object_map.update({s_id: object})
         object._s_id = s_id
+        print("add object: "+str(object))
     
     def get_object(self, s_id):
         return self.object_map.get(s_id)
