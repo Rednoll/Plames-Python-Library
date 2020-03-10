@@ -40,19 +40,17 @@ def main():
     init_modules()
     post_init_modules()
 
-    hyper_task_executor = threading.Thread(target=__run_hyper_task_cycle())
+    hyper_task_executor = threading.Thread(target=__run_hyper_task_cycle)
     hyper_task_executor.start()
 
     plames_client.send(output_packets.BootLoaded())
 
-    mutable_data.environment.terminate()
-
-    #'''
+    '''
     test_static = plames_client.request_static("com.inwaiders.plames.rost.test.entity.TestStaticClass")
     test_static.test_static_string = "changed!"
     test_static.push()
     print(test_static.test_static_method())
-    #'''
+    '''
 
 
 def add_hyper_task(runnable):
@@ -86,9 +84,6 @@ def connect():
 
     address = client_config["address"]
     port = int(client_config["port"])
-
-    mutable_data.environment = MockEnvironment()
-    mutable_data.environment.init()
 
     logger.info("Connecting to Plames machine "+address+":"+str(port))
     plames_client.connect(address, port)
@@ -234,18 +229,6 @@ class Environment(object):
 
     def __del__(self):
         del self.network_session
-
-
-class MockEnvironment(Environment):
-
-    def init(self):
-        pass
-
-    def terminate(self):
-        plames_client.request(request_packets.RequestTerminateEnvironment())
-
-    def flush(self):
-        pass
 
 
 class NetworkSession(object):

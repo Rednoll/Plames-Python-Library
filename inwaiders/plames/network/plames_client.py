@@ -1,6 +1,7 @@
 import socket
 import struct
 import threading
+from inwaiders.plames.plames import NetworkSession
 from threading import Lock, Event
 from multiprocessing import Queue
 
@@ -38,7 +39,12 @@ def connect(address, port, lock=True):
 
 
 def send(packet):
-    packet.session = mutable_data.environment.network_session
+
+    if mutable_data.environment is not None:
+        packet.session = mutable_data.environment.network_session
+    else:
+        packet.session = NetworkSession()
+
     packet._cached_output = BytesIO()
     packet.write(packet._cached_output)
     del packet.session
@@ -134,7 +140,10 @@ def __execute(packet):
     input_stream.write(packet._cached_input)
     input_stream.seek(0)
 
-    packet.session = mutable_data.environment.network_session
+    if mutable_data.environment is not None:
+        packet.session = mutable_data.environment.network_session
+    else:
+        packet.session = NetworkSession()
 
     packet.read(input_stream)
 
@@ -155,8 +164,6 @@ def __write_packets():
             pass
         '''
         packet = mutable_data.packetsQueue.get(True)
-
-        packet.session = mutable_data.environment.network_session
 
         output = packet._cached_output.getvalue()
 
