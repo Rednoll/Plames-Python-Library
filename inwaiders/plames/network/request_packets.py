@@ -171,15 +171,36 @@ mutable_data.input_packet_registry.update({16: lambda: RequestCreateEnvironment(
 
 class RequestTerminateEnvironment(JavaRequest):
 
-    def __init__(self, env_id):
+    def __init__(self, env_id=None):
         super().__init__()
         self.environment_id = env_id
 
     def write(self, output):
-        buffer_utils.write_int(output, self.environment_id)
+        buffer_utils.write_long(output, self.environment_id)
 
     def get_id(self):
         return 17
 
 
 mutable_data.input_packet_registry.update({17: lambda: RequestTerminateEnvironment()})
+
+
+class RequestAttachEntity(JavaRequest):
+
+    def __init__(self, name=None, id=None):
+        super().__init__()
+        self.name = name
+        self.id = id
+
+    def write(self, output):
+        buffer_utils.write_utf8(output, self.name)
+        buffer_utils.write_long(output, self.id)
+
+    def read(self, input):
+        self.s_id = buffer_utils.read_int(input)
+
+    def get_id(self):
+        return 18
+
+
+mutable_data.input_packet_registry.update({18: lambda: RequestAttachEntity()})

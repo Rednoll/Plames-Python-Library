@@ -466,7 +466,7 @@ def read_methods(input):
 def read_entity(input_stream, session):
 
     class_java_name = read_utf8(input_stream)
-    class_name = read_utf8(input_stream)
+    entity_name = read_utf8(input_stream)
     super_class_java_name = read_utf8(input_stream)
     s_id = read_int(input_stream)
    
@@ -486,9 +486,10 @@ def read_entity(input_stream, session):
 
     object_dict.update({"mark_as_dirty": mark_as_dirty})
 
-    new_object = type(class_name, (object,), object_dict)()
+    new_object = type(entity_name, (object,), object_dict)()
 
     new_object.class_java_name = class_java_name
+    new_object._entity_name = entity_name
     new_object.__types = fields_data[1]
     new_object.__fields_names = fields_data[2]
     new_object.__changed_vars = []

@@ -241,10 +241,14 @@ class NetworkSession(object):
     def terminate(self):
         del self.object_map
 
+    def attach_entity(self, entity):
+        s_id = plames_client.request(request_packets.RequestAttachEntity(entity._entity_name, entity.id)).s_id
+        self.add_object(entity, s_id)
+        return entity
+
     def add_object(self, object, s_id):
         self.object_map.update({s_id: object})
         object._s_id = s_id
-        print("add object: "+str(object))
     
     def get_object(self, s_id):
         return self.object_map.get(s_id)

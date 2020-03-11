@@ -69,6 +69,7 @@ class RunMessengerCommand(JavaInputPacket):
         command = command_registry.get_command(self.command_id)
 
         def run(command=command, profile=self.profile, args=self.args):
+            mutable_data.environment.network_session.attach_entity(profile)
             command.run(profile, args)
 
         plames.add_hyper_task(run)
