@@ -3,6 +3,7 @@ import struct
 import array
 import sys
 from builtins import hasattr
+from inwaiders.plames.plames import EntityLink
 
 from inwaiders.plames.network import class_type_utils, plames_client
 
@@ -139,6 +140,12 @@ def write_dict(output, _object, session=None):
     for key in _object:
         write_data(output, key, session)
         write_data(output, _object[key], session)
+
+
+def write_entity_link(output, entity_link, session=None):
+    write_utf8(output, entity_link.entity_name)
+    write_long(output, entity_link.entity_id)
+    write_list(output, entity_link.rep_args, session)
 
 
 def write_fields(output, _object, only_changes=False, session=None):
@@ -574,6 +581,16 @@ def read_static(input_stream, session):
     session.add_object(new_object, s_id)
 
     return new_object
+
+
+def read_entity_link(input, session):
+
+    link = EntityLink()
+    link.entity_name = read_utf8(input)
+    link.entity_id = read_long(input)
+    link.rep_args = read_list(input, session)
+
+    return link
 
 
 def read_data(input_stream, session, obj_type=None):

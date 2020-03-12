@@ -24,5 +24,6 @@ class MutableData(object):
         self.executorQueue = Queue()
         self.environment = None
         self.hyper_tasks_queue = Queue()
+        self.methods_registry = {}
 
 mutable_data = MutableData()

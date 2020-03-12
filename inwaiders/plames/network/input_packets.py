@@ -61,15 +61,17 @@ class RunMessengerCommand(JavaInputPacket):
 
     def read(self, input):
         self.command_id = buffer_utils.read_short(input)
-        self.profile = buffer_utils.read_entity(input, self.session)
+        self.profile_link = buffer_utils.read_entity_link(input, self.session)
         self.args = buffer_utils.read_string_array(input)
 
     def on_received(self):
 
         command = command_registry.get_command(self.command_id)
 
-        def run(command=command, profile=self.profile, args=self.args):
-            mutable_data.environment.network_session.attach_entity(profile)
+        def run(command=command, profile_link=self.profile_link, args=self.args):
+
+            profile = plames_client.request_entity(link=profile_link)
+
             command.run(profile, args)
 
         plames.add_hyper_task(run)

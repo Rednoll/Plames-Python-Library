@@ -311,5 +311,14 @@ class NetworkSession(object):
         return dependencies
 
 
+class EntityLink(object):
+
+    def __init__(self, entity_name=None, entity_id=None, rep_args=None):
+        self.entity_name = entity_name
+        self.entity_id = entity_id
+        self.rep_args = rep_args
+        self.is_entity_link = True
+
+
 if __name__ == "__main__":
     main()

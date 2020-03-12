@@ -204,3 +204,23 @@ class RequestAttachEntity(JavaRequest):
 
 
 mutable_data.input_packet_registry.update({18: lambda: RequestAttachEntity()})
+
+
+class RequestEntityByLink(JavaRequest):
+
+    def __init__(self, link=None):
+        super().__init__()
+        self.link = link
+
+    def write(self, output):
+        buffer_utils.write_entity_link(self.link, self.session)
+
+    def read(self, input):
+        self.java_object = buffer_utils.read_entity(input, self.session)
+
+    def get_id(self):
+        return 19
+
+
+mutable_data.input_packet_registry.update({19: lambda: RequestEntityByLink()})
+
