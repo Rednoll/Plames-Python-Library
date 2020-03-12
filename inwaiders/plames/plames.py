@@ -77,7 +77,7 @@ def __run_hyper_task(hyper_task):
 
     mutable_data.environment.terminate()
 
-    del mutable_data.environment
+    mutable_data.environment = None
 
 def connect():
     global logger

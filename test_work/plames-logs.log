@@ -10883,3 +10883,465 @@
 2020-03-11 19:15:47,020   INFO 13728 --- [MainThread]                       Plames : Begin post initialization modules
 2020-03-11 19:15:47,020   INFO 13728 --- [MainThread]                       Plames : Post init "Test Python Module" complete!
 2020-03-11 19:15:47,020   INFO 13728 --- [MainThread]                       Plames : Post initialization complete!
+2020-03-12 18:56:45,216   INFO 13088 --- [MainThread]                       Plames : Logger init complete!
+2020-03-12 18:56:45,217   INFO 13088 --- [MainThread]                       Plames : Configs loading complete!
+2020-03-12 18:56:45,218   INFO 13088 --- [MainThread]                       Plames : Importing modules...
+2020-03-12 18:56:45,222   INFO 13088 --- [MainThread]                       Plames : Import module: test_module.py
+2020-03-12 18:56:45,223   INFO 13088 --- [MainThread]                       Plames : Import complete!
+2020-03-12 18:56:45,223   INFO 13088 --- [MainThread]                       Plames : Loading modules...
+2020-03-12 18:56:45,223   INFO 13088 --- [MainThread]                       Plames : Load module: "Test Python Module" version: 1.0V
+2020-03-12 18:56:45,223   INFO 13088 --- [MainThread]                       Plames : Load complete!
+2020-03-12 18:56:45,224   INFO 13088 --- [MainThread]                       Plames : Begin pre initialization modules
+2020-03-12 18:56:45,224   INFO 13088 --- [MainThread]                       Plames : Pre init "Test Python Module" complete!
+2020-03-12 18:56:45,224   INFO 13088 --- [MainThread]                       Plames : Pre initialization complete!
+2020-03-12 18:56:45,225   INFO 13088 --- [MainThread]                       Plames : Connecting to Plames machine localhost:9090
+2020-03-12 18:56:45,266   INFO 13088 --- [MainThread]                       Plames : Connecting complete. Hi, Plames!
+2020-03-12 18:56:45,266   INFO 13088 --- [MainThread]                       Plames : Begin initialization modules
+2020-03-12 18:56:45,268   INFO 13088 --- [MainThread]      Plames.Command-Registry : Registered command "python" id: 0
+2020-03-12 18:56:45,269   INFO 13088 --- [MainThread]      Plames.Command-Registry : Registered command "test" id: 1
+2020-03-12 18:56:45,269   INFO 13088 --- [MainThread]      Plames.Command-Registry : Registered root "python"
+2020-03-12 18:56:45,269   INFO 13088 --- [MainThread]                       Plames : Init "Test Python Module" complete!
+2020-03-12 18:56:45,269   INFO 13088 --- [MainThread]                       Plames : Initialization complete!
+2020-03-12 18:56:45,270   INFO 13088 --- [MainThread]                       Plames : Begin post initialization modules
+2020-03-12 18:56:45,270   INFO 13088 --- [MainThread]                       Plames : Post init "Test Python Module" complete!
+2020-03-12 18:56:45,270   INFO 13088 --- [MainThread]                       Plames : Post initialization complete!
+2020-03-12 19:05:50,660   INFO 4716 --- [MainThread]                       Plames : Logger init complete!
+2020-03-12 19:05:50,661   INFO 4716 --- [MainThread]                       Plames : Configs loading complete!
+2020-03-12 19:05:50,661   INFO 4716 --- [MainThread]                       Plames : Importing modules...
+2020-03-12 19:05:50,665   INFO 4716 --- [MainThread]                       Plames : Import module: test_module.py
+2020-03-12 19:05:50,665   INFO 4716 --- [MainThread]                       Plames : Import complete!
+2020-03-12 19:05:50,665   INFO 4716 --- [MainThread]                       Plames : Loading modules...
+2020-03-12 19:05:50,666   INFO 4716 --- [MainThread]                       Plames : Load module: "Test Python Module" version: 1.0V
+2020-03-12 19:05:50,666   INFO 4716 --- [MainThread]                       Plames : Load complete!
+2020-03-12 19:05:50,666   INFO 4716 --- [MainThread]                       Plames : Begin pre initialization modules
+2020-03-12 19:05:50,666   INFO 4716 --- [MainThread]                       Plames : Pre init "Test Python Module" complete!
+2020-03-12 19:05:50,666   INFO 4716 --- [MainThread]                       Plames : Pre initialization complete!
+2020-03-12 19:05:50,667   INFO 4716 --- [MainThread]                       Plames : Connecting to Plames machine localhost:9090
+2020-03-12 19:05:50,679   INFO 4716 --- [MainThread]                       Plames : Connecting complete. Hi, Plames!
+2020-03-12 19:05:50,679   INFO 4716 --- [MainThread]                       Plames : Begin initialization modules
+2020-03-12 19:05:50,679   INFO 4716 --- [MainThread]      Plames.Command-Registry : Registered command "python" id: 0
+2020-03-12 19:05:50,679   INFO 4716 --- [MainThread]      Plames.Command-Registry : Registered command "test" id: 1
+2020-03-12 19:05:50,680   INFO 4716 --- [MainThread]      Plames.Command-Registry : Registered root "python"
+2020-03-12 19:05:50,680   INFO 4716 --- [MainThread]                       Plames : Init "Test Python Module" complete!
+2020-03-12 19:05:50,680   INFO 4716 --- [MainThread]                       Plames : Initialization complete!
+2020-03-12 19:05:50,680   INFO 4716 --- [MainThread]                       Plames : Begin post initialization modules
+2020-03-12 19:05:50,680   INFO 4716 --- [MainThread]                       Plames : Post init "Test Python Module" complete!
+2020-03-12 19:05:50,680   INFO 4716 --- [MainThread]                       Plames : Post initialization complete!
+2020-03-12 19:19:28,398   INFO 11764 --- [MainThread]                       Plames : Logger init complete!
+2020-03-12 19:19:28,399   INFO 11764 --- [MainThread]                       Plames : Configs loading complete!
+2020-03-12 19:19:28,399   INFO 11764 --- [MainThread]                       Plames : Importing modules...
+2020-03-12 19:19:28,403   INFO 11764 --- [MainThread]                       Plames : Import module: test_module.py
+2020-03-12 19:19:28,403   INFO 11764 --- [MainThread]                       Plames : Import complete!
+2020-03-12 19:19:28,403   INFO 11764 --- [MainThread]                       Plames : Loading modules...
+2020-03-12 19:19:28,403   INFO 11764 --- [MainThread]                       Plames : Load module: "Test Python Module" version: 1.0V
+2020-03-12 19:19:28,403   INFO 11764 --- [MainThread]                       Plames : Load complete!
+2020-03-12 19:19:28,404   INFO 11764 --- [MainThread]                       Plames : Begin pre initialization modules
+2020-03-12 19:19:28,404   INFO 11764 --- [MainThread]                       Plames : Pre init "Test Python Module" complete!
+2020-03-12 19:19:28,404   INFO 11764 --- [MainThread]                       Plames : Pre initialization complete!
+2020-03-12 19:19:28,404   INFO 11764 --- [MainThread]                       Plames : Connecting to Plames machine localhost:9090
+2020-03-12 19:19:28,422   INFO 11764 --- [MainThread]                       Plames : Connecting complete. Hi, Plames!
+2020-03-12 19:19:28,423   INFO 11764 --- [MainThread]                       Plames : Begin initialization modules
+2020-03-12 19:19:28,423   INFO 11764 --- [MainThread]      Plames.Command-Registry : Registered command "python" id: 0
+2020-03-12 19:19:28,423   INFO 11764 --- [MainThread]      Plames.Command-Registry : Registered command "test" id: 1
+2020-03-12 19:19:28,423   INFO 11764 --- [MainThread]      Plames.Command-Registry : Registered root "python"
+2020-03-12 19:19:28,423   INFO 11764 --- [MainThread]                       Plames : Init "Test Python Module" complete!
+2020-03-12 19:19:28,423   INFO 11764 --- [MainThread]                       Plames : Initialization complete!
+2020-03-12 19:19:28,423   INFO 11764 --- [MainThread]                       Plames : Begin post initialization modules
+2020-03-12 19:19:28,424   INFO 11764 --- [MainThread]                       Plames : Post init "Test Python Module" complete!
+2020-03-12 19:19:28,424   INFO 11764 --- [MainThread]                       Plames : Post initialization complete!
+2020-03-12 19:33:28,226   INFO 2568 --- [MainThread]                       Plames : Logger init complete!
+2020-03-12 19:33:28,227   INFO 2568 --- [MainThread]                       Plames : Configs loading complete!
+2020-03-12 19:33:28,227   INFO 2568 --- [MainThread]                       Plames : Importing modules...
+2020-03-12 19:33:28,232   INFO 2568 --- [MainThread]                       Plames : Import module: test_module.py
+2020-03-12 19:33:28,232   INFO 2568 --- [MainThread]                       Plames : Import complete!
+2020-03-12 19:33:28,232   INFO 2568 --- [MainThread]                       Plames : Loading modules...
+2020-03-12 19:33:28,233   INFO 2568 --- [MainThread]                       Plames : Load module: "Test Python Module" version: 1.0V
+2020-03-12 19:33:28,233   INFO 2568 --- [MainThread]                       Plames : Load complete!
+2020-03-12 19:33:28,233   INFO 2568 --- [MainThread]                       Plames : Begin pre initialization modules
+2020-03-12 19:33:28,233   INFO 2568 --- [MainThread]                       Plames : Pre init "Test Python Module" complete!
+2020-03-12 19:33:28,233   INFO 2568 --- [MainThread]                       Plames : Pre initialization complete!
+2020-03-12 19:33:28,233   INFO 2568 --- [MainThread]                       Plames : Connecting to Plames machine localhost:9090
+2020-03-12 19:33:28,254   INFO 2568 --- [MainThread]                       Plames : Connecting complete. Hi, Plames!
+2020-03-12 19:33:28,254   INFO 2568 --- [MainThread]                       Plames : Begin initialization modules
+2020-03-12 19:33:28,254   INFO 2568 --- [MainThread]      Plames.Command-Registry : Registered command "python" id: 0
+2020-03-12 19:33:28,254   INFO 2568 --- [MainThread]      Plames.Command-Registry : Registered command "test" id: 1
+2020-03-12 19:33:28,255   INFO 2568 --- [MainThread]      Plames.Command-Registry : Registered root "python"
+2020-03-12 19:33:28,255   INFO 2568 --- [MainThread]                       Plames : Init "Test Python Module" complete!
+2020-03-12 19:33:28,255   INFO 2568 --- [MainThread]                       Plames : Initialization complete!
+2020-03-12 19:33:28,255   INFO 2568 --- [MainThread]                       Plames : Begin post initialization modules
+2020-03-12 19:33:28,255   INFO 2568 --- [MainThread]                       Plames : Post init "Test Python Module" complete!
+2020-03-12 19:33:28,255   INFO 2568 --- [MainThread]                       Plames : Post initialization complete!
+2020-03-12 19:34:58,171   INFO 4352 --- [MainThread]                       Plames : Logger init complete!
+2020-03-12 19:34:58,172   INFO 4352 --- [MainThread]                       Plames : Configs loading complete!
+2020-03-12 19:34:58,172   INFO 4352 --- [MainThread]                       Plames : Importing modules...
+2020-03-12 19:34:58,174   INFO 4352 --- [MainThread]                       Plames : Import module: test_module.py
+2020-03-12 19:34:58,175   INFO 4352 --- [MainThread]                       Plames : Import complete!
+2020-03-12 19:34:58,175   INFO 4352 --- [MainThread]                       Plames : Loading modules...
+2020-03-12 19:34:58,175   INFO 4352 --- [MainThread]                       Plames : Load module: "Test Python Module" version: 1.0V
+2020-03-12 19:34:58,175   INFO 4352 --- [MainThread]                       Plames : Load complete!
+2020-03-12 19:34:58,175   INFO 4352 --- [MainThread]                       Plames : Begin pre initialization modules
+2020-03-12 19:34:58,175   INFO 4352 --- [MainThread]                       Plames : Pre init "Test Python Module" complete!
+2020-03-12 19:34:58,176   INFO 4352 --- [MainThread]                       Plames : Pre initialization complete!
+2020-03-12 19:34:58,177   INFO 4352 --- [MainThread]                       Plames : Connecting to Plames machine localhost:9090
+2020-03-12 19:34:58,196   INFO 4352 --- [MainThread]                       Plames : Connecting complete. Hi, Plames!
+2020-03-12 19:34:58,196   INFO 4352 --- [MainThread]                       Plames : Begin initialization modules
+2020-03-12 19:34:58,196   INFO 4352 --- [MainThread]      Plames.Command-Registry : Registered command "python" id: 0
+2020-03-12 19:34:58,196   INFO 4352 --- [MainThread]      Plames.Command-Registry : Registered command "test" id: 1
+2020-03-12 19:34:58,197   INFO 4352 --- [MainThread]      Plames.Command-Registry : Registered root "python"
+2020-03-12 19:34:58,197   INFO 4352 --- [MainThread]                       Plames : Init "Test Python Module" complete!
+2020-03-12 19:34:58,197   INFO 4352 --- [MainThread]                       Plames : Initialization complete!
+2020-03-12 19:34:58,197   INFO 4352 --- [MainThread]                       Plames : Begin post initialization modules
+2020-03-12 19:34:58,197   INFO 4352 --- [MainThread]                       Plames : Post init "Test Python Module" complete!
+2020-03-12 19:34:58,197   INFO 4352 --- [MainThread]                       Plames : Post initialization complete!
+2020-03-12 19:39:12,768   INFO 10588 --- [MainThread]                       Plames : Logger init complete!
+2020-03-12 19:39:12,769   INFO 10588 --- [MainThread]                       Plames : Configs loading complete!
+2020-03-12 19:39:12,769   INFO 10588 --- [MainThread]                       Plames : Importing modules...
+2020-03-12 19:39:12,773   INFO 10588 --- [MainThread]                       Plames : Import module: test_module.py
+2020-03-12 19:39:12,774   INFO 10588 --- [MainThread]                       Plames : Import complete!
+2020-03-12 19:39:12,774   INFO 10588 --- [MainThread]                       Plames : Loading modules...
+2020-03-12 19:39:12,774   INFO 10588 --- [MainThread]                       Plames : Load module: "Test Python Module" version: 1.0V
+2020-03-12 19:39:12,775   INFO 10588 --- [MainThread]                       Plames : Load complete!
+2020-03-12 19:39:12,775   INFO 10588 --- [MainThread]                       Plames : Begin pre initialization modules
+2020-03-12 19:39:12,775   INFO 10588 --- [MainThread]                       Plames : Pre init "Test Python Module" complete!
+2020-03-12 19:39:12,775   INFO 10588 --- [MainThread]                       Plames : Pre initialization complete!
+2020-03-12 19:39:12,776   INFO 10588 --- [MainThread]                       Plames : Connecting to Plames machine localhost:9090
+2020-03-12 19:39:12,790   INFO 10588 --- [MainThread]                       Plames : Connecting complete. Hi, Plames!
+2020-03-12 19:39:12,790   INFO 10588 --- [MainThread]                       Plames : Begin initialization modules
+2020-03-12 19:39:12,790   INFO 10588 --- [MainThread]      Plames.Command-Registry : Registered command "python" id: 0
+2020-03-12 19:39:12,791   INFO 10588 --- [MainThread]      Plames.Command-Registry : Registered command "test" id: 1
+2020-03-12 19:39:12,791   INFO 10588 --- [MainThread]      Plames.Command-Registry : Registered root "python"
+2020-03-12 19:39:12,791   INFO 10588 --- [MainThread]                       Plames : Init "Test Python Module" complete!
+2020-03-12 19:39:12,791   INFO 10588 --- [MainThread]                       Plames : Initialization complete!
+2020-03-12 19:39:12,792   INFO 10588 --- [MainThread]                       Plames : Begin post initialization modules
+2020-03-12 19:39:12,792   INFO 10588 --- [MainThread]                       Plames : Post init "Test Python Module" complete!
+2020-03-12 19:39:12,792   INFO 10588 --- [MainThread]                       Plames : Post initialization complete!
+2020-03-12 19:41:29,762   INFO 14140 --- [MainThread]                       Plames : Logger init complete!
+2020-03-12 19:41:29,762   INFO 14140 --- [MainThread]                       Plames : Configs loading complete!
+2020-03-12 19:41:29,762   INFO 14140 --- [MainThread]                       Plames : Importing modules...
+2020-03-12 19:41:29,765   INFO 14140 --- [MainThread]                       Plames : Import module: test_module.py
+2020-03-12 19:41:29,765   INFO 14140 --- [MainThread]                       Plames : Import complete!
+2020-03-12 19:41:29,765   INFO 14140 --- [MainThread]                       Plames : Loading modules...
+2020-03-12 19:41:29,765   INFO 14140 --- [MainThread]                       Plames : Load module: "Test Python Module" version: 1.0V
+2020-03-12 19:41:29,766   INFO 14140 --- [MainThread]                       Plames : Load complete!
+2020-03-12 19:41:29,766   INFO 14140 --- [MainThread]                       Plames : Begin pre initialization modules
+2020-03-12 19:41:29,766   INFO 14140 --- [MainThread]                       Plames : Pre init "Test Python Module" complete!
+2020-03-12 19:41:29,766   INFO 14140 --- [MainThread]                       Plames : Pre initialization complete!
+2020-03-12 19:41:29,766   INFO 14140 --- [MainThread]                       Plames : Connecting to Plames machine localhost:9090
+2020-03-12 19:41:29,781   INFO 14140 --- [MainThread]                       Plames : Connecting complete. Hi, Plames!
+2020-03-12 19:41:29,782   INFO 14140 --- [MainThread]                       Plames : Begin initialization modules
+2020-03-12 19:41:29,782   INFO 14140 --- [MainThread]      Plames.Command-Registry : Registered command "python" id: 0
+2020-03-12 19:41:29,782   INFO 14140 --- [MainThread]      Plames.Command-Registry : Registered command "test" id: 1
+2020-03-12 19:41:29,782   INFO 14140 --- [MainThread]      Plames.Command-Registry : Registered root "python"
+2020-03-12 19:41:29,783   INFO 14140 --- [MainThread]                       Plames : Init "Test Python Module" complete!
+2020-03-12 19:41:29,783   INFO 14140 --- [MainThread]                       Plames : Initialization complete!
+2020-03-12 19:41:29,783   INFO 14140 --- [MainThread]                       Plames : Begin post initialization modules
+2020-03-12 19:41:29,783   INFO 14140 --- [MainThread]                       Plames : Post init "Test Python Module" complete!
+2020-03-12 19:41:29,783   INFO 14140 --- [MainThread]                       Plames : Post initialization complete!
+2020-03-12 19:45:14,179   INFO 4176 --- [MainThread]                       Plames : Logger init complete!
+2020-03-12 19:45:14,181   INFO 4176 --- [MainThread]                       Plames : Configs loading complete!
+2020-03-12 19:45:14,182   INFO 4176 --- [MainThread]                       Plames : Importing modules...
+2020-03-12 19:45:14,193   INFO 4176 --- [MainThread]                       Plames : Import module: test_module.py
+2020-03-12 19:45:14,194   INFO 4176 --- [MainThread]                       Plames : Import complete!
+2020-03-12 19:45:14,194   INFO 4176 --- [MainThread]                       Plames : Loading modules...
+2020-03-12 19:45:14,195   INFO 4176 --- [MainThread]                       Plames : Load module: "Test Python Module" version: 1.0V
+2020-03-12 19:45:14,195   INFO 4176 --- [MainThread]                       Plames : Load complete!
+2020-03-12 19:45:14,195   INFO 4176 --- [MainThread]                       Plames : Begin pre initialization modules
+2020-03-12 19:45:14,195   INFO 4176 --- [MainThread]                       Plames : Pre init "Test Python Module" complete!
+2020-03-12 19:45:14,196   INFO 4176 --- [MainThread]                       Plames : Pre initialization complete!
+2020-03-12 19:45:14,196   INFO 4176 --- [MainThread]                       Plames : Connecting to Plames machine localhost:9090
+2020-03-12 19:45:14,254   INFO 4176 --- [MainThread]                       Plames : Connecting complete. Hi, Plames!
+2020-03-12 19:45:14,255   INFO 4176 --- [MainThread]                       Plames : Begin initialization modules
+2020-03-12 19:45:14,255   INFO 4176 --- [MainThread]      Plames.Command-Registry : Registered command "python" id: 0
+2020-03-12 19:45:14,256   INFO 4176 --- [MainThread]      Plames.Command-Registry : Registered command "test" id: 1
+2020-03-12 19:45:14,256   INFO 4176 --- [MainThread]      Plames.Command-Registry : Registered root "python"
+2020-03-12 19:45:14,257   INFO 4176 --- [MainThread]                       Plames : Init "Test Python Module" complete!
+2020-03-12 19:45:14,257   INFO 4176 --- [MainThread]                       Plames : Initialization complete!
+2020-03-12 19:45:14,258   INFO 4176 --- [MainThread]                       Plames : Begin post initialization modules
+2020-03-12 19:45:14,259   INFO 4176 --- [MainThread]                       Plames : Post init "Test Python Module" complete!
+2020-03-12 19:45:14,259   INFO 4176 --- [MainThread]                       Plames : Post initialization complete!
+2020-03-12 22:39:27,728   INFO 14232 --- [MainThread]                       Plames : Logger init complete!
+2020-03-12 22:39:27,729   INFO 14232 --- [MainThread]                       Plames : Configs loading complete!
+2020-03-12 22:39:27,730   INFO 14232 --- [MainThread]                       Plames : Importing modules...
+2020-03-12 22:39:27,740   INFO 14232 --- [MainThread]                       Plames : Import module: test_module.py
+2020-03-12 22:39:27,740   INFO 14232 --- [MainThread]                       Plames : Import complete!
+2020-03-12 22:39:27,741   INFO 14232 --- [MainThread]                       Plames : Loading modules...
+2020-03-12 22:39:27,741   INFO 14232 --- [MainThread]                       Plames : Load module: "Test Python Module" version: 1.0V
+2020-03-12 22:39:27,741   INFO 14232 --- [MainThread]                       Plames : Load complete!
+2020-03-12 22:39:27,742   INFO 14232 --- [MainThread]                       Plames : Begin pre initialization modules
+2020-03-12 22:39:27,742   INFO 14232 --- [MainThread]                       Plames : Pre init "Test Python Module" complete!
+2020-03-12 22:39:27,742   INFO 14232 --- [MainThread]                       Plames : Pre initialization complete!
+2020-03-12 22:39:27,742   INFO 14232 --- [MainThread]                       Plames : Connecting to Plames machine localhost:9090
+2020-03-12 22:39:27,768   INFO 14232 --- [MainThread]                       Plames : Connecting complete. Hi, Plames!
+2020-03-12 22:39:27,770   INFO 14232 --- [MainThread]                       Plames : Begin initialization modules
+2020-03-12 22:39:27,771   INFO 14232 --- [MainThread]      Plames.Command-Registry : Registered command "python" id: 0
+2020-03-12 22:39:27,771   INFO 14232 --- [MainThread]      Plames.Command-Registry : Registered command "test" id: 1
+2020-03-12 22:39:27,771   INFO 14232 --- [MainThread]      Plames.Command-Registry : Registered root "python"
+2020-03-12 22:39:27,772   INFO 14232 --- [MainThread]                       Plames : Init "Test Python Module" complete!
+2020-03-12 22:39:27,772   INFO 14232 --- [MainThread]                       Plames : Initialization complete!
+2020-03-12 22:39:27,773   INFO 14232 --- [MainThread]                       Plames : Begin post initialization modules
+2020-03-12 22:39:27,773   INFO 14232 --- [MainThread]                       Plames : Post init "Test Python Module" complete!
+2020-03-12 22:39:27,773   INFO 14232 --- [MainThread]                       Plames : Post initialization complete!
+2020-03-12 22:42:03,695   INFO 13072 --- [MainThread]                       Plames : Logger init complete!
+2020-03-12 22:42:03,696   INFO 13072 --- [MainThread]                       Plames : Configs loading complete!
+2020-03-12 22:42:03,696   INFO 13072 --- [MainThread]                       Plames : Importing modules...
+2020-03-12 22:42:03,704   INFO 13072 --- [MainThread]                       Plames : Import module: test_module.py
+2020-03-12 22:42:03,704   INFO 13072 --- [MainThread]                       Plames : Import complete!
+2020-03-12 22:42:03,704   INFO 13072 --- [MainThread]                       Plames : Loading modules...
+2020-03-12 22:42:03,705   INFO 13072 --- [MainThread]                       Plames : Load module: "Test Python Module" version: 1.0V
+2020-03-12 22:42:03,705   INFO 13072 --- [MainThread]                       Plames : Load complete!
+2020-03-12 22:42:03,705   INFO 13072 --- [MainThread]                       Plames : Begin pre initialization modules
+2020-03-12 22:42:03,705   INFO 13072 --- [MainThread]                       Plames : Pre init "Test Python Module" complete!
+2020-03-12 22:42:03,706   INFO 13072 --- [MainThread]                       Plames : Pre initialization complete!
+2020-03-12 22:42:03,706   INFO 13072 --- [MainThread]                       Plames : Connecting to Plames machine localhost:9090
+2020-03-12 22:42:03,729   INFO 13072 --- [MainThread]                       Plames : Connecting complete. Hi, Plames!
+2020-03-12 22:42:03,729   INFO 13072 --- [MainThread]                       Plames : Begin initialization modules
+2020-03-12 22:42:03,730   INFO 13072 --- [MainThread]      Plames.Command-Registry : Registered command "python" id: 0
+2020-03-12 22:42:03,730   INFO 13072 --- [MainThread]      Plames.Command-Registry : Registered command "test" id: 1
+2020-03-12 22:42:03,730   INFO 13072 --- [MainThread]      Plames.Command-Registry : Registered root "python"
+2020-03-12 22:42:03,731   INFO 13072 --- [MainThread]                       Plames : Init "Test Python Module" complete!
+2020-03-12 22:42:03,731   INFO 13072 --- [MainThread]                       Plames : Initialization complete!
+2020-03-12 22:42:03,731   INFO 13072 --- [MainThread]                       Plames : Begin post initialization modules
+2020-03-12 22:42:03,731   INFO 13072 --- [MainThread]                       Plames : Post init "Test Python Module" complete!
+2020-03-12 22:42:03,731   INFO 13072 --- [MainThread]                       Plames : Post initialization complete!
+2020-03-12 23:14:21,248   INFO 9876 --- [MainThread]                       Plames : Logger init complete!
+2020-03-12 23:14:21,249   INFO 9876 --- [MainThread]                       Plames : Configs loading complete!
+2020-03-12 23:14:21,250   INFO 9876 --- [MainThread]                       Plames : Importing modules...
+2020-03-12 23:14:21,254   INFO 9876 --- [MainThread]                       Plames : Import module: test_module.py
+2020-03-12 23:14:21,254   INFO 9876 --- [MainThread]                       Plames : Import complete!
+2020-03-12 23:14:21,254   INFO 9876 --- [MainThread]                       Plames : Loading modules...
+2020-03-12 23:14:21,255   INFO 9876 --- [MainThread]                       Plames : Load module: "Test Python Module" version: 1.0V
+2020-03-12 23:14:21,255   INFO 9876 --- [MainThread]                       Plames : Load complete!
+2020-03-12 23:14:21,255   INFO 9876 --- [MainThread]                       Plames : Begin pre initialization modules
+2020-03-12 23:14:21,256   INFO 9876 --- [MainThread]                       Plames : Pre init "Test Python Module" complete!
+2020-03-12 23:14:21,256   INFO 9876 --- [MainThread]                       Plames : Pre initialization complete!
+2020-03-12 23:14:21,256   INFO 9876 --- [MainThread]                       Plames : Connecting to Plames machine localhost:9090
+2020-03-12 23:14:21,367   INFO 9876 --- [MainThread]                       Plames : Connecting complete. Hi, Plames!
+2020-03-12 23:14:21,367   INFO 9876 --- [MainThread]                       Plames : Begin initialization modules
+2020-03-12 23:14:21,367   INFO 9876 --- [MainThread]      Plames.Command-Registry : Registered command "python" id: 0
+2020-03-12 23:14:21,367   INFO 9876 --- [MainThread]      Plames.Command-Registry : Registered command "test" id: 1
+2020-03-12 23:14:21,368   INFO 9876 --- [MainThread]      Plames.Command-Registry : Registered root "python"
+2020-03-12 23:14:21,368   INFO 9876 --- [MainThread]                       Plames : Init "Test Python Module" complete!
+2020-03-12 23:14:21,368   INFO 9876 --- [MainThread]                       Plames : Initialization complete!
+2020-03-12 23:14:21,368   INFO 9876 --- [MainThread]                       Plames : Begin post initialization modules
+2020-03-12 23:14:21,368   INFO 9876 --- [MainThread]                       Plames : Post init "Test Python Module" complete!
+2020-03-12 23:14:21,368   INFO 9876 --- [MainThread]                       Plames : Post initialization complete!
+2020-03-12 23:22:02,975   INFO 9708 --- [MainThread]                       Plames : Logger init complete!
+2020-03-12 23:22:02,976   INFO 9708 --- [MainThread]                       Plames : Configs loading complete!
+2020-03-12 23:22:02,976   INFO 9708 --- [MainThread]                       Plames : Importing modules...
+2020-03-12 23:22:02,981   INFO 9708 --- [MainThread]                       Plames : Import module: test_module.py
+2020-03-12 23:22:02,981   INFO 9708 --- [MainThread]                       Plames : Import complete!
+2020-03-12 23:22:02,981   INFO 9708 --- [MainThread]                       Plames : Loading modules...
+2020-03-12 23:22:02,982   INFO 9708 --- [MainThread]                       Plames : Load module: "Test Python Module" version: 1.0V
+2020-03-12 23:22:02,982   INFO 9708 --- [MainThread]                       Plames : Load complete!
+2020-03-12 23:22:02,982   INFO 9708 --- [MainThread]                       Plames : Begin pre initialization modules
+2020-03-12 23:22:02,982   INFO 9708 --- [MainThread]                       Plames : Pre init "Test Python Module" complete!
+2020-03-12 23:22:02,983   INFO 9708 --- [MainThread]                       Plames : Pre initialization complete!
+2020-03-12 23:22:02,983   INFO 9708 --- [MainThread]                       Plames : Connecting to Plames machine localhost:9090
+2020-03-12 23:22:03,000   INFO 9708 --- [MainThread]                       Plames : Connecting complete. Hi, Plames!
+2020-03-12 23:22:03,001   INFO 9708 --- [MainThread]                       Plames : Begin initialization modules
+2020-03-12 23:22:03,003   INFO 9708 --- [MainThread]      Plames.Command-Registry : Registered command "python" id: 0
+2020-03-12 23:22:03,003   INFO 9708 --- [MainThread]      Plames.Command-Registry : Registered command "test" id: 1
+2020-03-12 23:22:03,003   INFO 9708 --- [MainThread]      Plames.Command-Registry : Registered root "python"
+2020-03-12 23:22:03,004   INFO 9708 --- [MainThread]                       Plames : Init "Test Python Module" complete!
+2020-03-12 23:22:03,004   INFO 9708 --- [MainThread]                       Plames : Initialization complete!
+2020-03-12 23:22:03,004   INFO 9708 --- [MainThread]                       Plames : Begin post initialization modules
+2020-03-12 23:22:03,004   INFO 9708 --- [MainThread]                       Plames : Post init "Test Python Module" complete!
+2020-03-12 23:22:03,004   INFO 9708 --- [MainThread]                       Plames : Post initialization complete!
+2020-03-12 23:32:22,038   INFO 12880 --- [MainThread]                       Plames : Logger init complete!
+2020-03-12 23:32:22,049   INFO 12880 --- [MainThread]                       Plames : Configs loading complete!
+2020-03-12 23:32:22,049   INFO 12880 --- [MainThread]                       Plames : Importing modules...
+2020-03-12 23:32:22,065   INFO 12880 --- [MainThread]                       Plames : Import module: test_module.py
+2020-03-12 23:32:22,065   INFO 12880 --- [MainThread]                       Plames : Import complete!
+2020-03-12 23:32:22,066   INFO 12880 --- [MainThread]                       Plames : Loading modules...
+2020-03-12 23:32:22,066   INFO 12880 --- [MainThread]                       Plames : Load module: "Test Python Module" version: 1.0V
+2020-03-12 23:32:22,066   INFO 12880 --- [MainThread]                       Plames : Load complete!
+2020-03-12 23:32:22,066   INFO 12880 --- [MainThread]                       Plames : Begin pre initialization modules
+2020-03-12 23:32:22,067   INFO 12880 --- [MainThread]                       Plames : Pre init "Test Python Module" complete!
+2020-03-12 23:32:22,067   INFO 12880 --- [MainThread]                       Plames : Pre initialization complete!
+2020-03-12 23:32:22,069   INFO 12880 --- [MainThread]                       Plames : Connecting to Plames machine localhost:9090
+2020-03-12 23:32:22,152   INFO 12880 --- [MainThread]                       Plames : Connecting complete. Hi, Plames!
+2020-03-12 23:32:22,152   INFO 12880 --- [MainThread]                       Plames : Begin initialization modules
+2020-03-12 23:32:22,152   INFO 12880 --- [MainThread]      Plames.Command-Registry : Registered command "python" id: 0
+2020-03-12 23:32:22,153   INFO 12880 --- [MainThread]      Plames.Command-Registry : Registered command "test" id: 1
+2020-03-12 23:32:22,153   INFO 12880 --- [MainThread]      Plames.Command-Registry : Registered root "python"
+2020-03-12 23:32:22,153   INFO 12880 --- [MainThread]                       Plames : Init "Test Python Module" complete!
+2020-03-12 23:32:22,153   INFO 12880 --- [MainThread]                       Plames : Initialization complete!
+2020-03-12 23:32:22,154   INFO 12880 --- [MainThread]                       Plames : Begin post initialization modules
+2020-03-12 23:32:22,154   INFO 12880 --- [MainThread]                       Plames : Post init "Test Python Module" complete!
+2020-03-12 23:32:22,154   INFO 12880 --- [MainThread]                       Plames : Post initialization complete!
+2020-03-12 23:33:28,357   INFO 11508 --- [MainThread]                       Plames : Logger init complete!
+2020-03-12 23:33:28,358   INFO 11508 --- [MainThread]                       Plames : Configs loading complete!
+2020-03-12 23:33:28,358   INFO 11508 --- [MainThread]                       Plames : Importing modules...
+2020-03-12 23:33:28,364   INFO 11508 --- [MainThread]                       Plames : Import module: test_module.py
+2020-03-12 23:33:28,364   INFO 11508 --- [MainThread]                       Plames : Import complete!
+2020-03-12 23:33:28,364   INFO 11508 --- [MainThread]                       Plames : Loading modules...
+2020-03-12 23:33:28,365   INFO 11508 --- [MainThread]                       Plames : Load module: "Test Python Module" version: 1.0V
+2020-03-12 23:33:28,365   INFO 11508 --- [MainThread]                       Plames : Load complete!
+2020-03-12 23:33:28,365   INFO 11508 --- [MainThread]                       Plames : Begin pre initialization modules
+2020-03-12 23:33:28,365   INFO 11508 --- [MainThread]                       Plames : Pre init "Test Python Module" complete!
+2020-03-12 23:33:28,365   INFO 11508 --- [MainThread]                       Plames : Pre initialization complete!
+2020-03-12 23:33:28,366   INFO 11508 --- [MainThread]                       Plames : Connecting to Plames machine localhost:9090
+2020-03-12 23:33:28,386   INFO 11508 --- [MainThread]                       Plames : Connecting complete. Hi, Plames!
+2020-03-12 23:33:28,386   INFO 11508 --- [MainThread]                       Plames : Begin initialization modules
+2020-03-12 23:33:28,386   INFO 11508 --- [MainThread]      Plames.Command-Registry : Registered command "python" id: 0
+2020-03-12 23:33:28,387   INFO 11508 --- [MainThread]      Plames.Command-Registry : Registered command "test" id: 1
+2020-03-12 23:33:28,388   INFO 11508 --- [MainThread]      Plames.Command-Registry : Registered root "python"
+2020-03-12 23:33:28,388   INFO 11508 --- [MainThread]                       Plames : Init "Test Python Module" complete!
+2020-03-12 23:33:28,388   INFO 11508 --- [MainThread]                       Plames : Initialization complete!
+2020-03-12 23:33:28,389   INFO 11508 --- [MainThread]                       Plames : Begin post initialization modules
+2020-03-12 23:33:28,389   INFO 11508 --- [MainThread]                       Plames : Post init "Test Python Module" complete!
+2020-03-12 23:33:28,389   INFO 11508 --- [MainThread]                       Plames : Post initialization complete!
+2020-03-12 23:37:19,454   INFO 15156 --- [MainThread]                       Plames : Logger init complete!
+2020-03-12 23:37:19,456   INFO 15156 --- [MainThread]                       Plames : Configs loading complete!
+2020-03-12 23:37:19,456   INFO 15156 --- [MainThread]                       Plames : Importing modules...
+2020-03-12 23:37:19,462   INFO 15156 --- [MainThread]                       Plames : Import module: test_module.py
+2020-03-12 23:37:19,462   INFO 15156 --- [MainThread]                       Plames : Import complete!
+2020-03-12 23:37:19,462   INFO 15156 --- [MainThread]                       Plames : Loading modules...
+2020-03-12 23:37:19,463   INFO 15156 --- [MainThread]                       Plames : Load module: "Test Python Module" version: 1.0V
+2020-03-12 23:37:19,463   INFO 15156 --- [MainThread]                       Plames : Load complete!
+2020-03-12 23:37:19,463   INFO 15156 --- [MainThread]                       Plames : Begin pre initialization modules
+2020-03-12 23:37:19,464   INFO 15156 --- [MainThread]                       Plames : Pre init "Test Python Module" complete!
+2020-03-12 23:37:19,464   INFO 15156 --- [MainThread]                       Plames : Pre initialization complete!
+2020-03-12 23:37:19,464   INFO 15156 --- [MainThread]                       Plames : Connecting to Plames machine localhost:9090
+2020-03-12 23:37:19,486   INFO 15156 --- [MainThread]                       Plames : Connecting complete. Hi, Plames!
+2020-03-12 23:37:19,487   INFO 15156 --- [MainThread]                       Plames : Begin initialization modules
+2020-03-12 23:37:19,488   INFO 15156 --- [MainThread]      Plames.Command-Registry : Registered command "python" id: 0
+2020-03-12 23:37:19,488   INFO 15156 --- [MainThread]      Plames.Command-Registry : Registered command "test" id: 1
+2020-03-12 23:37:19,488   INFO 15156 --- [MainThread]      Plames.Command-Registry : Registered root "python"
+2020-03-12 23:37:19,488   INFO 15156 --- [MainThread]                       Plames : Init "Test Python Module" complete!
+2020-03-12 23:37:19,489   INFO 15156 --- [MainThread]                       Plames : Initialization complete!
+2020-03-12 23:37:19,489   INFO 15156 --- [MainThread]                       Plames : Begin post initialization modules
+2020-03-12 23:37:19,489   INFO 15156 --- [MainThread]                       Plames : Post init "Test Python Module" complete!
+2020-03-12 23:37:19,489   INFO 15156 --- [MainThread]                       Plames : Post initialization complete!
+2020-03-12 23:40:58,505   INFO 13132 --- [MainThread]                       Plames : Logger init complete!
+2020-03-12 23:40:58,507   INFO 13132 --- [MainThread]                       Plames : Configs loading complete!
+2020-03-12 23:40:58,507   INFO 13132 --- [MainThread]                       Plames : Importing modules...
+2020-03-12 23:40:58,514   INFO 13132 --- [MainThread]                       Plames : Import module: test_module.py
+2020-03-12 23:40:58,515   INFO 13132 --- [MainThread]                       Plames : Import complete!
+2020-03-12 23:40:58,515   INFO 13132 --- [MainThread]                       Plames : Loading modules...
+2020-03-12 23:40:58,515   INFO 13132 --- [MainThread]                       Plames : Load module: "Test Python Module" version: 1.0V
+2020-03-12 23:40:58,516   INFO 13132 --- [MainThread]                       Plames : Load complete!
+2020-03-12 23:40:58,516   INFO 13132 --- [MainThread]                       Plames : Begin pre initialization modules
+2020-03-12 23:40:58,516   INFO 13132 --- [MainThread]                       Plames : Pre init "Test Python Module" complete!
+2020-03-12 23:40:58,516   INFO 13132 --- [MainThread]                       Plames : Pre initialization complete!
+2020-03-12 23:40:58,516   INFO 13132 --- [MainThread]                       Plames : Connecting to Plames machine localhost:9090
+2020-03-12 23:40:58,538   INFO 13132 --- [MainThread]                       Plames : Connecting complete. Hi, Plames!
+2020-03-12 23:40:58,539   INFO 13132 --- [MainThread]                       Plames : Begin initialization modules
+2020-03-12 23:40:58,539   INFO 13132 --- [MainThread]      Plames.Command-Registry : Registered command "python" id: 0
+2020-03-12 23:40:58,539   INFO 13132 --- [MainThread]      Plames.Command-Registry : Registered command "test" id: 1
+2020-03-12 23:40:58,539   INFO 13132 --- [MainThread]      Plames.Command-Registry : Registered root "python"
+2020-03-12 23:40:58,540   INFO 13132 --- [MainThread]                       Plames : Init "Test Python Module" complete!
+2020-03-12 23:40:58,540   INFO 13132 --- [MainThread]                       Plames : Initialization complete!
+2020-03-12 23:40:58,540   INFO 13132 --- [MainThread]                       Plames : Begin post initialization modules
+2020-03-12 23:40:58,541   INFO 13132 --- [MainThread]                       Plames : Post init "Test Python Module" complete!
+2020-03-12 23:40:58,541   INFO 13132 --- [MainThread]                       Plames : Post initialization complete!
+2020-03-12 23:42:29,391   INFO 14664 --- [MainThread]                       Plames : Logger init complete!
+2020-03-12 23:42:29,392   INFO 14664 --- [MainThread]                       Plames : Configs loading complete!
+2020-03-12 23:42:29,393   INFO 14664 --- [MainThread]                       Plames : Importing modules...
+2020-03-12 23:42:29,402   INFO 14664 --- [MainThread]                       Plames : Import module: test_module.py
+2020-03-12 23:42:29,403   INFO 14664 --- [MainThread]                       Plames : Import complete!
+2020-03-12 23:42:29,403   INFO 14664 --- [MainThread]                       Plames : Loading modules...
+2020-03-12 23:42:29,403   INFO 14664 --- [MainThread]                       Plames : Load module: "Test Python Module" version: 1.0V
+2020-03-12 23:42:29,403   INFO 14664 --- [MainThread]                       Plames : Load complete!
+2020-03-12 23:42:29,403   INFO 14664 --- [MainThread]                       Plames : Begin pre initialization modules
+2020-03-12 23:42:29,404   INFO 14664 --- [MainThread]                       Plames : Pre init "Test Python Module" complete!
+2020-03-12 23:42:29,404   INFO 14664 --- [MainThread]                       Plames : Pre initialization complete!
+2020-03-12 23:42:29,404   INFO 14664 --- [MainThread]                       Plames : Connecting to Plames machine localhost:9090
+2020-03-12 23:42:29,443   INFO 14664 --- [MainThread]                       Plames : Connecting complete. Hi, Plames!
+2020-03-12 23:42:29,445   INFO 14664 --- [MainThread]                       Plames : Begin initialization modules
+2020-03-12 23:42:29,446   INFO 14664 --- [MainThread]      Plames.Command-Registry : Registered command "python" id: 0
+2020-03-12 23:42:29,446   INFO 14664 --- [MainThread]      Plames.Command-Registry : Registered command "test" id: 1
+2020-03-12 23:42:29,446   INFO 14664 --- [MainThread]      Plames.Command-Registry : Registered root "python"
+2020-03-12 23:42:29,447   INFO 14664 --- [MainThread]                       Plames : Init "Test Python Module" complete!
+2020-03-12 23:42:29,447   INFO 14664 --- [MainThread]                       Plames : Initialization complete!
+2020-03-12 23:42:29,447   INFO 14664 --- [MainThread]                       Plames : Begin post initialization modules
+2020-03-12 23:42:29,448   INFO 14664 --- [MainThread]                       Plames : Post init "Test Python Module" complete!
+2020-03-12 23:42:29,448   INFO 14664 --- [MainThread]                       Plames : Post initialization complete!
+2020-03-12 23:47:33,210   INFO 9028 --- [MainThread]                       Plames : Logger init complete!
+2020-03-12 23:47:33,212   INFO 9028 --- [MainThread]                       Plames : Configs loading complete!
+2020-03-12 23:47:33,212   INFO 9028 --- [MainThread]                       Plames : Importing modules...
+2020-03-12 23:47:33,220   INFO 9028 --- [MainThread]                       Plames : Import module: test_module.py
+2020-03-12 23:47:33,220   INFO 9028 --- [MainThread]                       Plames : Import complete!
+2020-03-12 23:47:33,222   INFO 9028 --- [MainThread]                       Plames : Loading modules...
+2020-03-12 23:47:33,222   INFO 9028 --- [MainThread]                       Plames : Load module: "Test Python Module" version: 1.0V
+2020-03-12 23:47:33,223   INFO 9028 --- [MainThread]                       Plames : Load complete!
+2020-03-12 23:47:33,223   INFO 9028 --- [MainThread]                       Plames : Begin pre initialization modules
+2020-03-12 23:47:33,223   INFO 9028 --- [MainThread]                       Plames : Pre init "Test Python Module" complete!
+2020-03-12 23:47:33,224   INFO 9028 --- [MainThread]                       Plames : Pre initialization complete!
+2020-03-12 23:47:33,224   INFO 9028 --- [MainThread]                       Plames : Connecting to Plames machine localhost:9090
+2020-03-12 23:47:33,247   INFO 9028 --- [MainThread]                       Plames : Connecting complete. Hi, Plames!
+2020-03-12 23:47:33,247   INFO 9028 --- [MainThread]                       Plames : Begin initialization modules
+2020-03-12 23:47:33,248   INFO 9028 --- [MainThread]      Plames.Command-Registry : Registered command "python" id: 0
+2020-03-12 23:47:33,248   INFO 9028 --- [MainThread]      Plames.Command-Registry : Registered command "test" id: 1
+2020-03-12 23:47:33,249   INFO 9028 --- [MainThread]      Plames.Command-Registry : Registered root "python"
+2020-03-12 23:47:33,249   INFO 9028 --- [MainThread]                       Plames : Init "Test Python Module" complete!
+2020-03-12 23:47:33,249   INFO 9028 --- [MainThread]                       Plames : Initialization complete!
+2020-03-12 23:47:33,250   INFO 9028 --- [MainThread]                       Plames : Begin post initialization modules
+2020-03-12 23:47:33,250   INFO 9028 --- [MainThread]                       Plames : Post init "Test Python Module" complete!
+2020-03-12 23:47:33,250   INFO 9028 --- [MainThread]                       Plames : Post initialization complete!
+2020-03-12 23:51:54,356   INFO 13912 --- [MainThread]                       Plames : Logger init complete!
+2020-03-12 23:51:54,357   INFO 13912 --- [MainThread]                       Plames : Configs loading complete!
+2020-03-12 23:51:54,357   INFO 13912 --- [MainThread]                       Plames : Importing modules...
+2020-03-12 23:51:54,364   INFO 13912 --- [MainThread]                       Plames : Import module: test_module.py
+2020-03-12 23:51:54,364   INFO 13912 --- [MainThread]                       Plames : Import complete!
+2020-03-12 23:51:54,365   INFO 13912 --- [MainThread]                       Plames : Loading modules...
+2020-03-12 23:51:54,365   INFO 13912 --- [MainThread]                       Plames : Load module: "Test Python Module" version: 1.0V
+2020-03-12 23:51:54,366   INFO 13912 --- [MainThread]                       Plames : Load complete!
+2020-03-12 23:51:54,366   INFO 13912 --- [MainThread]                       Plames : Begin pre initialization modules
+2020-03-12 23:51:54,366   INFO 13912 --- [MainThread]                       Plames : Pre init "Test Python Module" complete!
+2020-03-12 23:51:54,367   INFO 13912 --- [MainThread]                       Plames : Pre initialization complete!
+2020-03-12 23:51:54,367   INFO 13912 --- [MainThread]                       Plames : Connecting to Plames machine localhost:9090
+2020-03-12 23:51:54,385   INFO 13912 --- [MainThread]                       Plames : Connecting complete. Hi, Plames!
+2020-03-12 23:51:54,385   INFO 13912 --- [MainThread]                       Plames : Begin initialization modules
+2020-03-12 23:51:54,386   INFO 13912 --- [MainThread]      Plames.Command-Registry : Registered command "python" id: 0
+2020-03-12 23:51:54,386   INFO 13912 --- [MainThread]      Plames.Command-Registry : Registered command "test" id: 1
+2020-03-12 23:51:54,387   INFO 13912 --- [MainThread]      Plames.Command-Registry : Registered root "python"
+2020-03-12 23:51:54,387   INFO 13912 --- [MainThread]                       Plames : Init "Test Python Module" complete!
+2020-03-12 23:51:54,387   INFO 13912 --- [MainThread]                       Plames : Initialization complete!
+2020-03-12 23:51:54,387   INFO 13912 --- [MainThread]                       Plames : Begin post initialization modules
+2020-03-12 23:51:54,388   INFO 13912 --- [MainThread]                       Plames : Post init "Test Python Module" complete!
+2020-03-12 23:51:54,389   INFO 13912 --- [MainThread]                       Plames : Post initialization complete!
+2020-03-12 23:58:40,645   INFO 3552 --- [MainThread]                       Plames : Logger init complete!
+2020-03-12 23:58:40,646   INFO 3552 --- [MainThread]                       Plames : Configs loading complete!
+2020-03-12 23:58:40,646   INFO 3552 --- [MainThread]                       Plames : Importing modules...
+2020-03-12 23:58:40,651   INFO 3552 --- [MainThread]                       Plames : Import module: test_module.py
+2020-03-12 23:58:40,652   INFO 3552 --- [MainThread]                       Plames : Import complete!
+2020-03-12 23:58:40,652   INFO 3552 --- [MainThread]                       Plames : Loading modules...
+2020-03-12 23:58:40,652   INFO 3552 --- [MainThread]                       Plames : Load module: "Test Python Module" version: 1.0V
+2020-03-12 23:58:40,652   INFO 3552 --- [MainThread]                       Plames : Load complete!
+2020-03-12 23:58:40,652   INFO 3552 --- [MainThread]                       Plames : Begin pre initialization modules
+2020-03-12 23:58:40,653   INFO 3552 --- [MainThread]                       Plames : Pre init "Test Python Module" complete!
+2020-03-12 23:58:40,653   INFO 3552 --- [MainThread]                       Plames : Pre initialization complete!
+2020-03-12 23:58:40,653   INFO 3552 --- [MainThread]                       Plames : Connecting to Plames machine localhost:9090
+2020-03-12 23:58:40,674   INFO 3552 --- [MainThread]                       Plames : Connecting complete. Hi, Plames!
+2020-03-12 23:58:40,675   INFO 3552 --- [MainThread]                       Plames : Begin initialization modules
+2020-03-12 23:58:40,675   INFO 3552 --- [MainThread]      Plames.Command-Registry : Registered command "python" id: 0
+2020-03-12 23:58:40,676   INFO 3552 --- [MainThread]      Plames.Command-Registry : Registered command "test" id: 1
+2020-03-12 23:58:40,676   INFO 3552 --- [MainThread]      Plames.Command-Registry : Registered root "python"
+2020-03-12 23:58:40,676   INFO 3552 --- [MainThread]                       Plames : Init "Test Python Module" complete!
+2020-03-12 23:58:40,676   INFO 3552 --- [MainThread]                       Plames : Initialization complete!
+2020-03-12 23:58:40,677   INFO 3552 --- [MainThread]                       Plames : Begin post initialization modules
+2020-03-12 23:58:40,677   INFO 3552 --- [MainThread]                       Plames : Post init "Test Python Module" complete!
+2020-03-12 23:58:40,677   INFO 3552 --- [MainThread]                       Plames : Post initialization complete!
+2020-03-13 00:01:36,265   INFO 14372 --- [MainThread]                       Plames : Logger init complete!
+2020-03-13 00:01:36,266   INFO 14372 --- [MainThread]                       Plames : Configs loading complete!
+2020-03-13 00:01:36,266   INFO 14372 --- [MainThread]                       Plames : Importing modules...
+2020-03-13 00:01:36,274   INFO 14372 --- [MainThread]                       Plames : Import module: test_module.py
+2020-03-13 00:01:36,275   INFO 14372 --- [MainThread]                       Plames : Import complete!
+2020-03-13 00:01:36,275   INFO 14372 --- [MainThread]                       Plames : Loading modules...
+2020-03-13 00:01:36,275   INFO 14372 --- [MainThread]                       Plames : Load module: "Test Python Module" version: 1.0V
+2020-03-13 00:01:36,276   INFO 14372 --- [MainThread]                       Plames : Load complete!
+2020-03-13 00:01:36,276   INFO 14372 --- [MainThread]                       Plames : Begin pre initialization modules
+2020-03-13 00:01:36,276   INFO 14372 --- [MainThread]                       Plames : Pre init "Test Python Module" complete!
+2020-03-13 00:01:36,277   INFO 14372 --- [MainThread]                       Plames : Pre initialization complete!
+2020-03-13 00:01:36,277   INFO 14372 --- [MainThread]                       Plames : Connecting to Plames machine localhost:9090
+2020-03-13 00:01:36,310   INFO 14372 --- [MainThread]                       Plames : Connecting complete. Hi, Plames!
+2020-03-13 00:01:36,310   INFO 14372 --- [MainThread]                       Plames : Begin initialization modules
+2020-03-13 00:01:36,311   INFO 14372 --- [MainThread]      Plames.Command-Registry : Registered command "python" id: 0
+2020-03-13 00:01:36,311   INFO 14372 --- [MainThread]      Plames.Command-Registry : Registered command "test" id: 1
+2020-03-13 00:01:36,311   INFO 14372 --- [MainThread]      Plames.Command-Registry : Registered root "python"
+2020-03-13 00:01:36,312   INFO 14372 --- [MainThread]                       Plames : Init "Test Python Module" complete!
+2020-03-13 00:01:36,313   INFO 14372 --- [MainThread]                       Plames : Initialization complete!
+2020-03-13 00:01:36,313   INFO 14372 --- [MainThread]                       Plames : Begin post initialization modules
+2020-03-13 00:01:36,313   INFO 14372 --- [MainThread]                       Plames : Post init "Test Python Module" complete!
+2020-03-13 00:01:36,313   INFO 14372 --- [MainThread]                       Plames : Post initialization complete!

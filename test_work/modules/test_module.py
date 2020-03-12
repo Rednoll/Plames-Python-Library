@@ -38,5 +38,19 @@ class PythonTestCommand(command.MessengerCommand):
 
     def run(self, profile, args=[]):
         MessageUtils = plames_client.request_static("com.inwaiders.plames.system.utils.MessageUtils")
-        MessageUtils.send(profile, "Я питонова команда ахуеть и не встать!")
+        MessageUtils.send(profile, "Я питонова команда!")
 
+        '''
+        CurrencyAccountImpl = plames_client.request_static("com.inwaiders.plames.modules.wallet.domain.account.impl.CurrencyAccountImpl")
+        CurrencyImpl = plames_client.request_static("com.inwaiders.plames.modules.wallet.domain.currency.impl.CurrencyImpl")
+
+        currency = CurrencyImpl.parse_by_sign("dnt")
+
+        user = profile.get_user()
+
+        bill = plames_client.create("CurrencyBill", (user, 10))
+        bill.description = "Test python bill creation!"
+        bill.account = CurrencyAccountImpl.parse_account(currency, "private", user, True)
+        bill.currency_amount = 1000
+        bill.profile = profile
+        '''

@@ -213,10 +213,10 @@ class RequestEntityByLink(JavaRequest):
         self.link = link
 
     def write(self, output):
-        buffer_utils.write_entity_link(self.link, self.session)
+        buffer_utils.write_entity_link(output, self.link, self.session)
 
     def read(self, input):
-        self.java_object = buffer_utils.read_entity(input, self.session)
+        self.java_object = buffer_utils.read_data(input, self.session)
 
     def get_id(self):
         return 19

@@ -3,7 +3,6 @@ import struct
 import array
 import sys
 from builtins import hasattr
-from inwaiders.plames.plames import EntityLink
 
 from inwaiders.plames.network import class_type_utils, plames_client
 
@@ -585,6 +584,7 @@ def read_static(input_stream, session):
 
 def read_entity_link(input, session):
 
+    from inwaiders.plames.plames import EntityLink
     link = EntityLink()
     link.entity_name = read_utf8(input)
     link.entity_id = read_long(input)
