@@ -144,7 +144,6 @@ def write_dict(output, _object, session=None):
 def write_entity_link(output, entity_link, session=None):
     write_utf8(output, entity_link.entity_name)
     write_long(output, entity_link.entity_id)
-    write_list(output, entity_link.rep_args, session)
 
 
 def write_fields(output, _object, only_changes=False, session=None):
@@ -585,10 +584,10 @@ def read_static(input_stream, session):
 def read_entity_link(input, session):
 
     from inwaiders.plames.plames import EntityLink
+
     link = EntityLink()
     link.entity_name = read_utf8(input)
     link.entity_id = read_long(input)
-    link.rep_args = read_list(input, session)
 
     return link
 

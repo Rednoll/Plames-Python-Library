@@ -16,19 +16,17 @@ class JavaRequest(JavaInputPacket, JavaOutputPacket):
 
 class RequestEntity(JavaRequest):
 
-    def __init__(self, entity_name=None, method_name=None, args=None, rep_args=None):
+    def __init__(self, entity_name=None, method_name=None, args=None):
         super().__init__()
         self.entity_name = entity_name
         self.method_name = method_name
         self.args = args if args is not None else []
-        self.rep_args = rep_args if rep_args is not None else []
         self.java_object = None
 
     def write(self, output):
         buffer_utils.write_utf8(output, self.entity_name)
         buffer_utils.write_utf8(output, self.method_name)
         buffer_utils.write_list(output, self.args)
-        buffer_utils.write_list(output, self.rep_args)
 
     def read(self, input_stream):
         self.java_object = buffer_utils.read_data(input_stream, self.session)
@@ -63,16 +61,14 @@ mutable_data.input_packet_registry.update({5: lambda: RequestEntityAttr()})
 
 class RequestCreateEntity(JavaRequest):
 
-    def __init__(self, entity_name, args, rep_args):
+    def __init__(self, entity_name=None, args=None):
         super().__init__()
         self.entity_name = entity_name
         self.args = args if args is not None else []
-        self.rep_args = rep_args if rep_args is not None else []
 
     def write(self, output):
         buffer_utils.write_utf8(output, self.entity_name)
         buffer_utils.write_list(output, self.args)
-        buffer_utils.write_list(output, self.rep_args)
 
     def read(self, input_socket):
         self.java_object = buffer_utils.read_data(input_socket, self.session)
