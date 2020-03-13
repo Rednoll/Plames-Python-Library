@@ -51,8 +51,8 @@ def send(packet):
     mutable_data.packetsQueue.put(packet)
 
 
-def create(entity_name, args=[], rep_args=[]):
-    return request(request_packets.RequestCreateEntity(entity_name, args, rep_args)).java_object
+def create(entity_name, args=[]):
+    return request(request_packets.RequestCreateEntity(entity_name, args)).java_object
 
 
 def request(request_packet):
@@ -80,12 +80,12 @@ def request(request_packet):
     return answer_packet
 
 
-def request_entity(entity_name=None, method_name=None, args=None, rep_args=[], link=None):
+def request_entity(entity_name=None, method_name=None, args=None, link=None):
 
     if link is not None:
         return request(request_packets.RequestEntityByLink(link)).java_object
     else:
-        return request(request_packets.RequestEntity(entity_name, method_name, args, rep_args)).java_object
+        return request(request_packets.RequestEntity(entity_name, method_name, args)).java_object
 
 
 def request_static(static_name):

@@ -37,10 +37,9 @@ class PythonTestCommand(command.MessengerCommand):
         self.aliases.append("test")
 
     def run(self, profile, args=[]):
-        MessageUtils = plames_client.request_static("com.inwaiders.plames.system.utils.MessageUtils")
-        MessageUtils.send(profile, "Я питонова команда!")
+        #MessageUtils = plames_client.request_static("com.inwaiders.plames.system.utils.MessageUtils")
+        #MessageUtils.send(profile, "Я питонова команда!")
 
-        '''
         CurrencyAccountImpl = plames_client.request_static("com.inwaiders.plames.modules.wallet.domain.account.impl.CurrencyAccountImpl")
         CurrencyImpl = plames_client.request_static("com.inwaiders.plames.modules.wallet.domain.currency.impl.CurrencyImpl")
 
@@ -53,4 +52,3 @@ class PythonTestCommand(command.MessengerCommand):
         bill.account = CurrencyAccountImpl.parse_account(currency, "private", user, True)
         bill.currency_amount = 1000
         bill.profile = profile
-        '''

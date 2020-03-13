@@ -165,7 +165,6 @@ def write_fields(output, _object, only_changes=False, session=None):
 
             write_utf8(output, to_camel_case(var_name))
             write_data(output, var, session, vars_types[to_camel_case(var_name)])
-
     else:
 
         if hasattr(_object, "__changed_vars"):
@@ -664,7 +663,7 @@ def read_data(input_stream, session, obj_type=None):
         return read_boolean_array(input_stream)
 
     elif obj_type == class_types.LINK:
-        assert False, "Link can be read only like field!"
+        return session.get_object(read_int(input_stream))
 
     elif obj_type == class_types.OBJECT:
         return read_object(input_stream, session)

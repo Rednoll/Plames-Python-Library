@@ -68,7 +68,7 @@ class RequestCreateEntity(JavaRequest):
 
     def write(self, output):
         buffer_utils.write_utf8(output, self.entity_name)
-        buffer_utils.write_list(output, self.args)
+        buffer_utils.write_list(output, self.args, self.session)
 
     def read(self, input_socket):
         self.java_object = buffer_utils.read_data(input_socket, self.session)
