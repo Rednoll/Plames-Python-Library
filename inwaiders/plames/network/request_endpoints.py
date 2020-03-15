@@ -56,12 +56,12 @@ mutable_data.input_packet_registry.update({8: lambda: MessengerCommandsRequest()
 class RunObjectMethod(JavaInputPacket):
 
     def read(self, input):
-        self.entity_id = buffer_utils.read_long(input)
-        self.target_s_id = buffer_utils.read_int(input)
         self.method_id = buffer_utils.read_long(input)
         self.args = buffer_utils.read_list(input, self.session)
 
     def on_received(self):
 
-        def run(entity_id=self.entity_id, target_s_id=self.target_s_id, method_id=self.method_id, args=self.args):
-            plames.add_hyper_task(run)
+        def run(method_id=self.method_id, args=self.args):
+            pass
+
+        plames.add_hyper_task(run)

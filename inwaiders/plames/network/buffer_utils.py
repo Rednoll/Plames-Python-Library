@@ -165,6 +165,7 @@ def write_fields(output, _object, only_changes=False, session=None):
 
             write_utf8(output, to_camel_case(var_name))
             write_data(output, var, session, vars_types[to_camel_case(var_name)])
+
     else:
 
         if hasattr(_object, "__changed_vars"):
@@ -187,7 +188,6 @@ def write_fields(output, _object, only_changes=False, session=None):
 
             write_utf8(output, to_camel_case(var_name))
             write_data(output, var, session, vars_types[to_camel_case(var_name)])
-
 
 def write_entity(output, entity, session=None):
     write_utf8(output, entity.class_java_name)
@@ -688,7 +688,10 @@ def read_fields(input_stream, session):
     for i in range(0, fields_count):
         java_field_name = read_utf8(input_stream)
         field_name = to_snake_case(java_field_name)
+
         field_type = read_short(input_stream)
+
+        object_type = read_short(input_stream)
 
         def set_f(self, value, field_name=field_name):
 
@@ -698,7 +701,7 @@ def read_fields(input_stream, session):
                 self.__changed_vars.append(field_name)
                 self.mark_as_dirty()
 
-        if class_type_utils.is_lazy(field_type):
+        if class_type_utils.is_lazy(object_type):
 
             def get_f(self, field_name=field_name):
 
@@ -711,7 +714,7 @@ def read_fields(input_stream, session):
 
             field_value = property(get_f, set_f)
 
-        elif field_type == class_types.LINK:
+        elif object_type == class_types.LINK:
 
             s_id = read_int(input_stream)
 
@@ -736,7 +739,7 @@ def read_fields(input_stream, session):
                 else:
                     return None
 
-            fields_dict.update({"_"+field_name: read_data(input_stream, session, field_type)})
+            fields_dict.update({"_"+field_name: read_data(input_stream, session, object_type)})
             field_value = property(get_f, set_f)
 
         fields_dict.update({field_name: field_value})
