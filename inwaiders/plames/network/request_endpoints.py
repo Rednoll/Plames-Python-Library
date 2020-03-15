@@ -10,6 +10,7 @@ class RequestEndpoint(JavaInputPacket, JavaOutputPacket):
     def __init__(self):
         super().__init__()
         self.request_id = -1
+        self.asynchronous = False
 
     def on_received(self):
         pass
@@ -42,9 +43,7 @@ class MessengerCommandsRequest(RequestEndpoint):
         pass
 
     def write(self, output):
-
         buffer_utils.write_dict(output, mutable_data.commands_roots_registry, self.session)
-        pass
 
     def get_id(self):
         return 8
@@ -53,16 +52,33 @@ class MessengerCommandsRequest(RequestEndpoint):
 mutable_data.input_packet_registry.update({8: lambda: MessengerCommandsRequest()})
 
 
-class RunObjectMethod(JavaInputPacket):
+class RunObjectMethod(RequestEndpoint):
 
     def read(self, input):
         self.method_id = buffer_utils.read_long(input)
         self.args = buffer_utils.read_list(input, self.session)
+        self.asynchronous = True
 
     def on_received(self):
 
-        def run(method_id=self.method_id, args=self.args):
-            #init dev branch
-            pass
+        def run(request_id=self.request_id, method_id=self.method_id, args=self.args):
+
+            method = mutable_data.methods_registry.get(method_id)
+            result = method(args)
+
+            answer = RunObjectMethod()
+            answer.request_id = request_id
+            answer.result = result
+
+            plames_client.send(answer)
 
         plames.add_hyper_task(run)
+
+    def write(self, output):
+        buffer_utils.write_data(output, self.result, self.session)
+
+    def get_id(self):
+        return 20
+
+
+mutable_data.input_packet_registry.update({20: lambda: RunObjectMethod()})

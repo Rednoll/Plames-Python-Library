@@ -155,7 +155,7 @@ def __execute(packet):
 
     packet.on_received()
 
-    if isinstance(packet, RequestEndpoint):
+    if isinstance(packet, RequestEndpoint) and not packet.asynchronous:
         send(packet)
 
     packet.session = None
